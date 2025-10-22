@@ -1,0 +1,984 @@
+# Copyright (C) 2025 Chris Martens
+# This file is distributed under the GPL v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: SafeFonts 1.0.9\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/safefonts\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2025-10-22T19:31:04+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: safefonts\n"
+
+#. Plugin Name of the plugin
+#: safefonts.php
+#: includes/Admin/AdminInterface.php:38
+#: includes/Admin/AdminInterface.php:39
+#: includes/Core.php:313
+msgid "SafeFonts"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: safefonts.php
+msgid "https://safefonts.com"
+msgstr ""
+
+#. Description of the plugin
+#: safefonts.php
+msgid "Secure font management for WordPress with Gutenberg integration and local hosting for GDPR compliance."
+msgstr ""
+
+#. Author of the plugin
+#: safefonts.php
+msgid "Chris Martens"
+msgstr ""
+
+#. Author URI of the plugin
+#: safefonts.php
+msgid "https://chris-martens.com"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:50
+#: includes/Admin/AdminInterface.php:51
+msgid "Dashboard"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:60
+#: includes/Admin/AdminInterface.php:61
+#: views/admin-page.php:20
+msgid "Fonts"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:70
+#: includes/Admin/AdminInterface.php:71
+#: views/admin-page.php:23
+msgid "Upload"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:80
+#: includes/Admin/AdminInterface.php:81
+#: includes/Admin/AdminInterface.php:403
+#: views/admin-page.php:26
+#: views/dashboard-page.php:69
+msgid "Settings"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:90
+#: includes/Admin/AdminInterface.php:91
+#: views/admin-page.php:29
+msgid "System Info"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:100
+#: includes/Admin/AdminInterface.php:101
+msgid "Help & Documentation"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:136
+msgid "Are you sure you want to delete this font?"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:137
+#: includes/Admin/AdminInterface.php:327
+msgid "Uploading..."
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:138
+msgid "Processing..."
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:139
+msgid "Upload completed successfully!"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:140
+msgid "Upload failed"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:141
+msgid "Failed to delete font"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:142
+msgid "Font family name is required"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:185
+msgid "Settings saved successfully."
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:242
+msgid "Upload Font File"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:244
+msgid "Upload individual font files (.woff2, .woff, .ttf, .otf) for use in Gutenberg."
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:251
+msgid "Font Family Name"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:260
+msgid "Enter the font family name (e.g., \"Open Sans\", \"Roboto\")."
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:266
+msgid "Font Weight"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:284
+msgid "Font Style"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:295
+msgid "Font File"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:304
+msgid "Select a font file (.woff2, .woff, .ttf, .otf)."
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:317
+msgid "Upload Font"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:319
+msgid "Upload font file"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:340
+msgid "No fonts found. Upload font files to get started."
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:347
+#: includes/Admin/AdminInterface.php:608
+msgid "Installed Fonts"
+msgstr ""
+
+#. translators: %s: font family name
+#: includes/Admin/AdminInterface.php:374
+#, php-format
+msgid "Delete %s font"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:381
+msgid "Delete"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:409
+msgid "Maximum File Size (MB)"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:420
+msgid "Maximum size for individual font files."
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:427
+#: includes/Admin/AdminInterface.php:432
+#: views/help-page.php:129
+msgid "Allowed Font Types"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:440
+msgid "Recommended"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:468
+msgid "WOFF2 is recommended for best performance and compression."
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:476
+#: includes/Admin/AdminInterface.php:485
+#: views/help-page.php:132
+msgid "Font Preloading"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:490
+msgid "No fonts uploaded yet. Upload fonts to enable preloading."
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:504
+msgid "⚡ Font preloading tells the browser to download fonts earlier, reducing flash of invisible text (FOIT)."
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:505
+msgid "Tip:"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:505
+msgid "Only preload 1-2 critical fonts (like your main body font) for best performance."
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:514
+#: includes/Admin/AdminInterface.php:519
+#: views/help-page.php:139
+msgid "Data Management"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:527
+msgid "Delete all plugin data when uninstalling"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:531
+msgid "⚠️ Warning: If checked, uninstalling this plugin will permanently delete:"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:532
+msgid "All uploaded font files"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:533
+msgid "Font database records"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:534
+msgid "All plugin settings"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:535
+msgid "This cannot be undone!"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:535
+msgid "Leave unchecked if you plan to reinstall later."
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:548
+msgid "Save Settings"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:569
+msgid "System Information"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:573
+msgid "Plugin Version"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:578
+msgid "WordPress Version"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:583
+msgid "PHP Version"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:588
+msgid "Fonts Directory"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:595
+msgid "Writable"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:597
+msgid "Not writable"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:603
+msgid "Fonts URL"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:613
+msgid "Max Upload Size"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:618
+msgid "Memory Limit"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:623
+#: views/admin-page.php:65
+#: views/dashboard-page.php:125
+#: views/upload-page.php:43
+msgid "Gutenberg Integration"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:626
+msgid "WordPress 6.5+ Font Library Supported"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:628
+msgid "WordPress 6.5+ required for Font Library"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:635
+msgid "🚀 Want More Features?"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:636
+msgid "Upgrade to SafeFonts Pro for:"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:638
+msgid "✅ Page Builder Integration (Elementor, Bricks, Beaver Builder, Divi, Oxygen)"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:639
+msgid "✅ Bulk ZIP Package Import from Google Fonts Downloader"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:640
+msgid "✅ Professional Admin Interface with Drag & Drop"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:641
+msgid "✅ REST API Endpoints for External Access"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:642
+msgid "✅ Advanced Font Management Tools"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:646
+msgid "Learn More About SafeFonts Pro →"
+msgstr ""
+
+#: includes/Core.php:314
+msgid "Locally hosted fonts managed by SafeFonts"
+msgstr ""
+
+#: includes/Core.php:493
+#: includes/Core.php:505
+msgid "SafeFonts Error:"
+msgstr ""
+
+#. translators: %s: directory path
+#: includes/Core.php:496
+#, php-format
+msgid "Could not create the fonts directory at <code>%s</code>. Please create this directory manually and ensure it is writable by the web server."
+msgstr ""
+
+#. translators: %s: directory path
+#: includes/Core.php:508
+#, php-format
+msgid "The fonts directory at <code>%s</code> is not writable. Please set the correct permissions (755 or 775) for this directory."
+msgstr ""
+
+#: includes/Core.php:512
+msgid "You can fix this by running:"
+msgstr ""
+
+#: includes/FontManager.php:145
+msgid "Failed to copy font file."
+msgstr ""
+
+#: includes/FontManager.php:168
+msgid "Failed to save font to database."
+msgstr ""
+
+#: includes/FontManager.php:188
+msgid "Font file not found."
+msgstr ""
+
+#: includes/FontManager.php:194
+msgid "Font file is too large."
+msgstr ""
+
+#. translators: %1$s: file extension, %2$s: allowed file types
+#: includes/FontManager.php:213
+#, php-format
+msgid "Font file extension \"%1$s\" is not allowed. Allowed types: %2$s"
+msgstr ""
+
+#. translators: %1$s: detected MIME type, %2$s: file extension
+#: includes/FontManager.php:224
+#, php-format
+msgid "Font file MIME type \"%1$s\" is not valid for .%2$s files."
+msgstr ""
+
+#: includes/FontManager.php:229
+msgid "Font file signature validation failed."
+msgstr ""
+
+#: includes/FontManager.php:320
+#: includes/FontManager.php:367
+msgid "Security check failed."
+msgstr ""
+
+#: includes/FontManager.php:324
+msgid "No file uploaded."
+msgstr ""
+
+#: includes/FontManager.php:332
+msgid "File upload error."
+msgstr ""
+
+#: includes/FontManager.php:343
+msgid "Font family name is required."
+msgstr ""
+
+#: includes/FontManager.php:355
+msgid "Font uploaded successfully!"
+msgstr ""
+
+#: includes/FontManager.php:371
+msgid "Font ID is required."
+msgstr ""
+
+#: includes/FontManager.php:389
+msgid "Font not found."
+msgstr ""
+
+#: includes/FontManager.php:408
+msgid "Font deleted successfully."
+msgstr ""
+
+#: views/admin-page.php:44
+#: views/upload-page.php:22
+msgid "How to Use SafeFonts"
+msgstr ""
+
+#: views/admin-page.php:48
+#: views/upload-page.php:26
+msgid "Upload Font Files"
+msgstr ""
+
+#: views/admin-page.php:49
+#: views/upload-page.php:27
+msgid "Upload individual font files (.woff2, .woff, .ttf, .otf) using the form above."
+msgstr ""
+
+#: views/admin-page.php:52
+#: views/dashboard-page.php:91
+#: views/help-page.php:48
+#: views/upload-page.php:30
+msgid "Use in Gutenberg"
+msgstr ""
+
+#: views/admin-page.php:53
+#: views/upload-page.php:31
+msgid "Your fonts will automatically appear in the Gutenberg block editor typography settings."
+msgstr ""
+
+#: views/admin-page.php:56
+#: views/upload-page.php:34
+msgid "WordPress 6.5+ Font Library"
+msgstr ""
+
+#: views/admin-page.php:57
+#: views/upload-page.php:35
+msgid "If you have WordPress 6.5+, fonts will also appear in the Site Editor Font Library."
+msgstr ""
+
+#: views/admin-page.php:67
+#: views/upload-page.php:45
+msgid "✅ Block Editor Typography"
+msgstr ""
+
+#: views/admin-page.php:68
+#: views/help-page.php:86
+#: views/upload-page.php:46
+msgid "Your uploaded fonts automatically appear in:"
+msgstr ""
+
+#: views/admin-page.php:70
+#: views/upload-page.php:48
+msgid "Paragraph blocks typography settings"
+msgstr ""
+
+#: views/admin-page.php:71
+#: views/upload-page.php:49
+msgid "Heading blocks font family options"
+msgstr ""
+
+#: views/admin-page.php:72
+#: views/upload-page.php:50
+msgid "All blocks with typography support"
+msgstr ""
+
+#: views/admin-page.php:74
+#: views/upload-page.php:52
+msgid "WordPress 6.5+ Site Editor Font Library"
+msgstr ""
+
+#: views/dashboard-page.php:23
+msgid "Welcome to SafeFonts"
+msgstr ""
+
+#: views/dashboard-page.php:29
+msgid "🚀 Secure Font Management for WordPress"
+msgstr ""
+
+#: views/dashboard-page.php:31
+msgid "Host your fonts locally for GDPR compliance, better performance, and complete control. Your fonts integrate seamlessly with Gutenberg and the WordPress Site Editor."
+msgstr ""
+
+#: views/dashboard-page.php:39
+msgid "Font Families"
+msgstr ""
+
+#: views/dashboard-page.php:43
+msgid "Font Files"
+msgstr ""
+
+#: views/dashboard-page.php:47
+#: views/dashboard-page.php:113
+msgid "GDPR Compliant"
+msgstr ""
+
+#: views/dashboard-page.php:53
+msgid "Quick Actions"
+msgstr ""
+
+#: views/dashboard-page.php:57
+msgid "Upload Fonts"
+msgstr ""
+
+#: views/dashboard-page.php:58
+msgid "Add new font files to your library"
+msgstr ""
+
+#: views/dashboard-page.php:63
+msgid "Manage Fonts"
+msgstr ""
+
+#: views/dashboard-page.php:64
+msgid "View and organize your font collection"
+msgstr ""
+
+#: views/dashboard-page.php:70
+msgid "Configure file sizes and preloading"
+msgstr ""
+
+#: views/dashboard-page.php:75
+msgid "Documentation"
+msgstr ""
+
+#: views/dashboard-page.php:76
+msgid "Learn how to use SafeFonts"
+msgstr ""
+
+#: views/dashboard-page.php:84
+msgid "🎯 Getting Started"
+msgstr ""
+
+#: views/dashboard-page.php:87
+msgid "Upload Your Fonts"
+msgstr ""
+
+#: views/dashboard-page.php:88
+msgid "Go to Upload and add your font files (.woff2, .woff, .ttf, .otf)"
+msgstr ""
+
+#: views/dashboard-page.php:92
+msgid "Your fonts automatically appear in the block editor typography settings"
+msgstr ""
+
+#: views/dashboard-page.php:95
+msgid "Optimize Performance"
+msgstr ""
+
+#: views/dashboard-page.php:96
+msgid "Enable font preloading in Settings for faster page loads"
+msgstr ""
+
+#: views/dashboard-page.php:101
+msgid "Upload Your First Font"
+msgstr ""
+
+#: views/dashboard-page.php:109
+msgid "✨ Features"
+msgstr ""
+
+#: views/dashboard-page.php:114
+msgid "Self-host fonts locally, no external requests to Google or other CDNs"
+msgstr ""
+
+#: views/dashboard-page.php:119
+msgid "Better Performance"
+msgstr ""
+
+#: views/dashboard-page.php:120
+msgid "Serve fonts from your own server for faster load times and better control"
+msgstr ""
+
+#: views/dashboard-page.php:126
+msgid "Fonts automatically appear in the block editor typography settings"
+msgstr ""
+
+#: views/dashboard-page.php:131
+msgid "Site Editor Support"
+msgstr ""
+
+#: views/dashboard-page.php:132
+msgid "WordPress 6.5+ users get full Site Editor Font Library integration"
+msgstr ""
+
+#: views/dashboard-page.php:140
+msgid "🚀 Upgrade to SafeFonts Pro"
+msgstr ""
+
+#: views/dashboard-page.php:141
+msgid "Get even more features with SafeFonts Pro:"
+msgstr ""
+
+#: views/dashboard-page.php:143
+msgid "Bulk import Google Fonts families"
+msgstr ""
+
+#: views/dashboard-page.php:144
+msgid "Elementor, Bricks, Beaver Builder, Divi, Oxygen support"
+msgstr ""
+
+#: views/dashboard-page.php:145
+msgid "Advanced font management tools"
+msgstr ""
+
+#: views/dashboard-page.php:146
+msgid "Priority support"
+msgstr ""
+
+#: views/dashboard-page.php:150
+msgid "Learn More About Pro"
+msgstr ""
+
+#: views/help-page.php:28
+#: views/help-page.php:42
+msgid "🚀 Getting Started"
+msgstr ""
+
+#: views/help-page.php:29
+msgid "📤 Uploading"
+msgstr ""
+
+#: views/help-page.php:30
+#: views/help-page.php:83
+msgid "✍️ Using Fonts"
+msgstr ""
+
+#: views/help-page.php:31
+msgid "🗂️ Managing"
+msgstr ""
+
+#: views/help-page.php:32
+#: views/help-page.php:124
+msgid "⚙️ Settings"
+msgstr ""
+
+#: views/help-page.php:33
+#: views/help-page.php:145
+msgid "🔧 Troubleshooting"
+msgstr ""
+
+#: views/help-page.php:34
+msgid "❓ FAQ"
+msgstr ""
+
+#: views/help-page.php:43
+msgid "SafeFonts allows you to self-host custom fonts on your WordPress site for GDPR compliance and better performance."
+msgstr ""
+
+#: views/help-page.php:45
+msgid "Quick Start Guide"
+msgstr ""
+
+#: views/help-page.php:47
+msgid "Upload your fonts"
+msgstr ""
+
+#: views/help-page.php:47
+msgid "Go to Upload and add your .woff2, .woff, .ttf, or .otf font files"
+msgstr ""
+
+#: views/help-page.php:48
+msgid "Your fonts automatically appear in the block editor"
+msgstr ""
+
+#: views/help-page.php:49
+msgid "Optimize"
+msgstr ""
+
+#: views/help-page.php:49
+msgid "Configure preloading in Settings for better performance"
+msgstr ""
+
+#: views/help-page.php:55
+msgid "📤 Uploading Fonts"
+msgstr ""
+
+#: views/help-page.php:57
+msgid "Supported Font Formats"
+msgstr ""
+
+#: views/help-page.php:59
+msgid "Recommended. Best compression and modern browser support."
+msgstr ""
+
+#: views/help-page.php:60
+msgid "Good fallback for older browsers."
+msgstr ""
+
+#: views/help-page.php:61
+msgid "TrueType fonts, widely compatible."
+msgstr ""
+
+#: views/help-page.php:62
+msgid "OpenType fonts with advanced typography features."
+msgstr ""
+
+#: views/help-page.php:65
+msgid "How to Upload"
+msgstr ""
+
+#: views/help-page.php:67
+msgid "Go to SafeFonts → Upload"
+msgstr ""
+
+#: views/help-page.php:68
+msgid "Enter the font family name (e.g., \"Open Sans\")"
+msgstr ""
+
+#: views/help-page.php:69
+msgid "Select the font weight (100-900)"
+msgstr ""
+
+#: views/help-page.php:70
+msgid "Choose the font style (Normal or Italic)"
+msgstr ""
+
+#: views/help-page.php:71
+msgid "Upload your font file"
+msgstr ""
+
+#: views/help-page.php:72
+msgid "Click Upload Font"
+msgstr ""
+
+#: views/help-page.php:76
+#: views/help-page.php:135
+msgid "💡 Pro Tip:"
+msgstr ""
+
+#: views/help-page.php:77
+msgid "For best results, use WOFF2 format. It offers the best compression (30-50% smaller than WOFF) and is supported by all modern browsers."
+msgstr ""
+
+#: views/help-page.php:85
+msgid "Gutenberg Block Editor"
+msgstr ""
+
+#: views/help-page.php:88
+msgid "Paragraph blocks → Typography → Font family"
+msgstr ""
+
+#: views/help-page.php:89
+msgid "Heading blocks → Typography → Font family"
+msgstr ""
+
+#: views/help-page.php:90
+msgid "Any block with typography support"
+msgstr ""
+
+#: views/help-page.php:93
+msgid "WordPress 6.5+ Site Editor"
+msgstr ""
+
+#: views/help-page.php:94
+msgid "If you have WordPress 6.5 or higher, your fonts also appear in:"
+msgstr ""
+
+#: views/help-page.php:96
+msgid "Site Editor → Styles → Typography → Font families"
+msgstr ""
+
+#: views/help-page.php:97
+msgid "Global Styles → Typography settings"
+msgstr ""
+
+#: views/help-page.php:101
+msgid "ℹ️ Note:"
+msgstr ""
+
+#: views/help-page.php:102
+msgid "After uploading fonts, you may need to refresh your browser to see them in the editor."
+msgstr ""
+
+#: views/help-page.php:108
+msgid "🗂️ Managing Fonts"
+msgstr ""
+
+#: views/help-page.php:110
+msgid "View Your Fonts"
+msgstr ""
+
+#: views/help-page.php:111
+msgid "Go to SafeFonts → Fonts to see all your uploaded font families and variants."
+msgstr ""
+
+#: views/help-page.php:113
+msgid "Delete Fonts"
+msgstr ""
+
+#: views/help-page.php:114
+msgid "On the Fonts page, click the Delete button next to any font file to remove it."
+msgstr ""
+
+#: views/help-page.php:117
+msgid "⚠️ Warning:"
+msgstr ""
+
+#: views/help-page.php:118
+msgid "Deleting a font will break any pages or templates using it. Make sure to update your content before deleting fonts."
+msgstr ""
+
+#: views/help-page.php:126
+msgid "Maximum File Size"
+msgstr ""
+
+#: views/help-page.php:127
+msgid "Set the maximum allowed size for individual font files (1-50 MB). Default is 2 MB."
+msgstr ""
+
+#: views/help-page.php:130
+msgid "Choose which font file formats can be uploaded. WOFF2 is recommended for best performance."
+msgstr ""
+
+#: views/help-page.php:133
+msgid "Enable preloading for 1-2 critical fonts (like your main body font) to improve page load performance."
+msgstr ""
+
+#: views/help-page.php:136
+msgid "Only preload fonts that are used above the fold. Preloading too many fonts can actually hurt performance."
+msgstr ""
+
+#: views/help-page.php:140
+msgid "Choose whether to delete all plugin data when uninstalling. Leave unchecked if you plan to reinstall later."
+msgstr ""
+
+#: views/help-page.php:147
+msgid "Fonts not appearing in editor"
+msgstr ""
+
+#: views/help-page.php:149
+msgid "Clear your browser cache and refresh the page"
+msgstr ""
+
+#: views/help-page.php:150
+msgid "Make sure the font was uploaded successfully (check SafeFonts → Fonts)"
+msgstr ""
+
+#: views/help-page.php:151
+msgid "Try using a different browser to rule out browser-specific issues"
+msgstr ""
+
+#: views/help-page.php:154
+msgid "Upload fails"
+msgstr ""
+
+#: views/help-page.php:156
+msgid "Check that your file size is under the maximum allowed size"
+msgstr ""
+
+#: views/help-page.php:157
+msgid "Verify the font format is allowed in Settings"
+msgstr ""
+
+#: views/help-page.php:158
+msgid "Ensure the uploads directory is writable (check System Info)"
+msgstr ""
+
+#: views/help-page.php:161
+msgid "Fonts not loading on frontend"
+msgstr ""
+
+#: views/help-page.php:163
+msgid "Check browser console for 404 errors"
+msgstr ""
+
+#: views/help-page.php:164
+msgid "Verify fonts directory is accessible (check System Info)"
+msgstr ""
+
+#: views/help-page.php:165
+msgid "Try disabling caching plugins temporarily"
+msgstr ""
+
+#: views/help-page.php:166
+msgid "Clear your site cache and browser cache"
+msgstr ""
+
+#: views/help-page.php:172
+msgid "❓ Frequently Asked Questions"
+msgstr ""
+
+#: views/help-page.php:174
+msgid "Is SafeFonts GDPR compliant?"
+msgstr ""
+
+#: views/help-page.php:175
+msgid "Yes! SafeFonts hosts all fonts locally on your server, so no data is sent to external services like Google Fonts. This makes it fully GDPR compliant."
+msgstr ""
+
+#: views/help-page.php:177
+msgid "Which font format should I use?"
+msgstr ""
+
+#: views/help-page.php:178
+msgid "WOFF2 is recommended for best compression and modern browser support. You can also upload WOFF as a fallback for older browsers."
+msgstr ""
+
+#: views/help-page.php:180
+msgid "How many fonts can I upload?"
+msgstr ""
+
+#: views/help-page.php:181
+msgid "There is no limit on the number of fonts you can upload, but keep in mind that too many fonts can slow down your site."
+msgstr ""
+
+#: views/help-page.php:183
+msgid "Can I use these fonts in page builders?"
+msgstr ""
+
+#: views/help-page.php:184
+msgid "SafeFonts Free works with Gutenberg. For page builder support (Elementor, Bricks, Beaver Builder, Divi, Oxygen), upgrade to SafeFonts Pro."
+msgstr ""
+
+#: views/help-page.php:186
+msgid "Where are fonts stored?"
+msgstr ""
+
+#: views/help-page.php:187
+msgid "Fonts are stored in /wp-content/uploads/safefonts/ directory and registered in the WordPress database."
+msgstr ""
+
+#: views/help-page.php:189
+msgid "Can I import Google Fonts?"
+msgstr ""
+
+#: views/help-page.php:190
+msgid "SafeFonts Free requires manual upload of font files. SafeFonts Pro includes bulk Google Fonts import feature."
+msgstr ""
+
+#: views/help-page.php:192
+msgid "What happens if I delete the plugin?"
+msgstr ""
+
+#: views/help-page.php:193
+msgid "By default, your fonts and settings are preserved. If you want to delete all data, enable \"Delete all plugin data when uninstalling\" in Settings before uninstalling."
+msgstr ""
+
+#: views/help-page.php:200
+msgid "💬 Need More Help?"
+msgstr ""
+
+#: views/help-page.php:201
+msgid "If you cannot find the answer to your question in this documentation:"
+msgstr ""
+
+#: views/help-page.php:203
+msgid "Visit the WordPress.org support forum"
+msgstr ""
+
+#: views/help-page.php:204
+msgid "Report bugs on GitHub"
+msgstr ""
+
+#: views/help-page.php:205
+msgid "Contact us directly"
+msgstr ""
