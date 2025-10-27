@@ -102,7 +102,8 @@ class FontManager {
         $css .= "/* Generated: " . current_time('mysql') . " */\n\n";
 
         foreach ($fonts as $font) {
-            $font_url = SAFEFONTS_ASSETS_URL . basename($font->file_path);
+            // Use relative path from database (includes family folder if present)
+            $font_url = SAFEFONTS_ASSETS_URL . $font->file_path;
             $format = $this->get_font_format($font->file_path);
 
             $css .= "@font-face {\n";
@@ -136,9 +137,21 @@ class FontManager {
             return $validation_result;
         }
 
+        // Get family slug for folder name
+        $family_slug = $this->get_family_slug($font_info['family']);
+
+        // Create family folder if it doesn't exist
+        $family_dir = SAFEFONTS_ASSETS_DIR . $family_slug . '/';
+        if (!file_exists($family_dir)) {
+            wp_mkdir_p($family_dir);
+        }
+
         // Generate safe filename
         $safe_filename = $this->generate_safe_filename($original_filename);
-        $destination = SAFEFONTS_ASSETS_DIR . $safe_filename;
+
+        // Full path includes family folder
+        $relative_path = $family_slug . '/' . $safe_filename;
+        $destination = SAFEFONTS_ASSETS_DIR . $relative_path;
 
         // Copy file to assets directory
         if (!copy($font_file_path, $destination)) {
@@ -151,9 +164,10 @@ class FontManager {
 
         $font_data = array(
             'font_family' => sanitize_text_field($font_info['family']),
+            'family_slug' => $family_slug,
             'font_style' => sanitize_text_field($font_info['style'] ?? 'normal'),
             'font_weight' => sanitize_text_field($font_info['weight'] ?? '400'),
-            'file_path' => $safe_filename,
+            'file_path' => $relative_path,
             'file_hash' => hash_file('sha256', $destination),
             'file_size' => filesize($destination),
             'mime_type' => $validation_result['mime_type']
@@ -279,6 +293,16 @@ class FontManager {
     }
 
     /**
+     * Get sanitized family slug for folder/database
+     *
+     * @param string $family_name Font family name
+     * @return string Sanitized slug
+     */
+    private function get_family_slug($family_name) {
+        return sanitize_title($family_name);
+    }
+
+    /**
      * Get font format for CSS
      */
     private function get_font_format($file_path) {
@@ -393,6 +417,27 @@ class FontManager {
         $file_path = SAFEFONTS_ASSETS_DIR . $font->file_path;
         if (file_exists($file_path)) {
             wp_delete_file($file_path);
+        }
+
+        // Check if family folder is empty and remove it
+        $family_dir = dirname($file_path);
+        if ($family_dir !== SAFEFONTS_ASSETS_DIR && is_dir($family_dir)) {
+            // Check if directory is empty (only . and .. remain)
+            // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_readdir -- Required for directory cleanup check
+            $files = scandir($family_dir);
+            $files = array_diff($files, array('.', '..', 'index.php', '.htaccess'));
+
+            if (empty($files)) {
+                // Remove index.php if exists
+                $index_file = $family_dir . '/index.php';
+                if (file_exists($index_file)) {
+                    wp_delete_file($index_file);
+                }
+
+                // Remove directory
+                // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir -- Required for cleanup
+                @rmdir($family_dir);
+            }
         }
 
         // Delete from database

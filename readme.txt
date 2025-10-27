@@ -3,7 +3,7 @@ Contributors: chrmrtns
 Tags: fonts, google fonts, custom fonts, typography, gutenberg
 Requires at least: 5.0
 Tested up to: 6.8
-Stable tag: 1.0.9
+Stable tag: 1.1.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -165,7 +165,7 @@ Learn more at https://safefonts.com
 
 = Where are the font files stored? =
 
-Font files are stored in `/wp-content/plugins/safefonts/assets/fonts/` with proper security protection. Font metadata is stored in a custom database table for fast retrieval.
+Font files are stored in `/wp-content/uploads/safefonts/` organized by font family (e.g., `/roboto/`, `/open-sans/`) with proper security protection. Font metadata is stored in a custom database table for fast retrieval.
 
 = Can I delete fonts? =
 
@@ -181,6 +181,15 @@ Yes! Each font has a delete button in the SafeFonts admin interface. Deleting a 
 6. Fonts automatically available in Gutenberg typography settings
 
 == Changelog ==
+
+= 1.1.0 =
+* NEW: Font family folder organization - fonts now stored in dedicated family folders (e.g., /roboto/, /open-sans/)
+* NEW: Added family_slug column to database for faster family-based queries
+* NEW: Automatic migration on plugin update - existing fonts moved to family folders seamlessly
+* NEW: Automatic cleanup of empty family folders when last font is deleted
+* IMPROVED: Admin UI - Font weight badge now uses yellow color instead of red to avoid confusion with delete button
+* IMPROVED: File path handling - relative paths now include family folder structure
+* Technical: Database schema version bump for migration support
 
 = 1.0.9 =
 * Fixed: Removed manual load_plugin_textdomain() - WordPress.org handles translations automatically
@@ -253,6 +262,9 @@ Yes! Each font has a delete button in the SafeFonts admin interface. Deleting a 
 
 == Upgrade Notice ==
 
+= 1.1.0 =
+Font organization enhancement: Fonts are now organized in family-specific folders for better management. Automatic migration included - your existing fonts will be seamlessly moved to the new structure on update. UI improvement with clearer badge colors.
+
 = 1.0.9 =
 Important update: Font storage moved to wp-content/uploads/safefonts/ for WordPress best practices. All existing fonts will be automatically migrated on activation. Update recommended for better compatibility and font persistence.
 
@@ -303,9 +315,10 @@ SafeFonts provides helper functions for developers:
 **Table:** `wp_chrmrtns_safefonts`
 * `id` - Font ID
 * `font_family` - Font family name
+* `family_slug` - Sanitized family slug for folder names (v1.1.0+)
 * `font_style` - normal or italic
 * `font_weight` - 100-900
-* `file_path` - Relative path to font file
+* `file_path` - Relative path to font file (includes family folder v1.1.0+)
 * `file_hash` - SHA-256 hash for integrity
 * `file_size` - File size in bytes
 * `mime_type` - Validated MIME type

@@ -141,7 +141,8 @@ class Core {
                 continue;
             }
 
-            $font_url = SAFEFONTS_ASSETS_URL . basename($font->file_path);
+            // Use relative path from database (includes family folder if present)
+            $font_url = SAFEFONTS_ASSETS_URL . $font->file_path;
             $extension = strtolower(pathinfo($font->file_path, PATHINFO_EXTENSION));
 
             // Map file extension to MIME type
@@ -221,7 +222,8 @@ class Core {
             $font_faces = array();
 
             foreach ($variants as $variant) {
-                $font_url = SAFEFONTS_ASSETS_URL . basename($variant->file_path);
+                // Use relative path from database (includes family folder if present)
+                $font_url = SAFEFONTS_ASSETS_URL . $variant->file_path;
 
                 $font_faces[] = array(
                     'fontFamily' => $family,
@@ -283,7 +285,8 @@ class Core {
             $font_face = array();
 
             foreach ($variants as $variant) {
-                $font_url = SAFEFONTS_ASSETS_URL . basename($variant->file_path);
+                // Use relative path from database (includes family folder if present)
+                $font_url = SAFEFONTS_ASSETS_URL . $variant->file_path;
 
                 $font_face[] = array(
                     'fontFamily' => $family,
@@ -329,6 +332,7 @@ class Core {
         $sql = "CREATE TABLE IF NOT EXISTS {$table_name} (
             id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
             font_family varchar(255) NOT NULL,
+            family_slug varchar(255) NOT NULL DEFAULT '',
             font_style varchar(50) NOT NULL DEFAULT 'normal',
             font_weight varchar(50) NOT NULL DEFAULT '400',
             file_path varchar(500) NOT NULL,
@@ -339,11 +343,21 @@ class Core {
             updated_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             PRIMARY KEY (id),
             KEY font_family (font_family),
+            KEY family_slug (family_slug),
             KEY file_hash (file_hash)
         ) {$charset_collate};";
 
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
         dbDelta($sql);
+
+        // Check if migration is needed (upgrading from older version)
+        $installed_version = get_option('safefonts_version', '0.0.0');
+        $needs_migration = version_compare($installed_version, '1.1.0', '<');
+
+        if ($needs_migration && $installed_version !== '0.0.0') {
+            // Migrate existing fonts to family folders
+            $this->migrate_to_family_folders();
+        }
 
         // Set default options
         add_option('safefonts_max_file_size', 2 * 1024 * 1024);
@@ -415,6 +429,83 @@ class Core {
         // Add admin notice about migration
         if ($migrated_count > 0) {
             add_option('safefonts_migration_notice', $migrated_count);
+        }
+    }
+
+    /**
+     * Migrate fonts from flat structure to family folders (v1.1.0+)
+     *
+     * @return void
+     */
+    private function migrate_to_family_folders() {
+        global $wpdb;
+
+        $table_name = $wpdb->prefix . 'chrmrtns_safefonts';
+
+        // Get all fonts that need migration (file_path doesn't contain '/')
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Migration query, one-time operation
+        $fonts = $wpdb->get_results(
+            "SELECT * FROM {$table_name} WHERE file_path NOT LIKE '%/%'" // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        );
+
+        if (empty($fonts)) {
+            return;
+        }
+
+        $migrated_count = 0;
+
+        foreach ($fonts as $font) {
+            // Generate family slug
+            $family_slug = sanitize_title($font->font_family);
+
+            // Skip if already has family_slug set and file already in folder
+            if (!empty($font->family_slug) && strpos($font->file_path, '/') !== false) {
+                continue;
+            }
+
+            // Create family folder
+            $family_dir = SAFEFONTS_ASSETS_DIR . $family_slug . '/';
+            if (!file_exists($family_dir)) {
+                wp_mkdir_p($family_dir);
+            }
+
+            // Old file path (flat structure)
+            $old_file = SAFEFONTS_ASSETS_DIR . $font->file_path;
+
+            // New file path (family folder structure)
+            $new_relative_path = $family_slug . '/' . $font->file_path;
+            $new_file = SAFEFONTS_ASSETS_DIR . $new_relative_path;
+
+            // Move file if it exists
+            if (file_exists($old_file) && !file_exists($new_file)) {
+                if (rename($old_file, $new_file)) {
+                    // Update database with new path and family_slug
+                    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Migration update, one-time operation
+                    $wpdb->update(
+                        $table_name,
+                        array(
+                            'file_path' => $new_relative_path,
+                            'family_slug' => $family_slug
+                        ),
+                        array('id' => $font->id),
+                        array('%s', '%s'),
+                        array('%d')
+                    );
+
+                    $migrated_count++;
+                }
+            }
+        }
+
+        if ($migrated_count > 0) {
+            // Clear fonts cache
+            delete_transient('safefonts_fonts_list_v' . SAFEFONTS_VERSION);
+
+            // Regenerate fonts.css
+            $this->generate_fonts_css();
+
+            // Add admin notice
+            add_option('safefonts_family_folders_migrated_count', $migrated_count);
         }
     }
 
