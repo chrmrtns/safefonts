@@ -158,7 +158,6 @@ SafeFonts Pro adds:
 * Page builder integration (Elementor, Bricks, Beaver Builder, Divi, Oxygen)
 * Bulk ZIP package imports from Google Fonts Downloader
 * Professional admin interface with drag & drop
-* REST API endpoints
 * Advanced font management tools
 
 Learn more at https://safefonts.com

@@ -638,7 +638,6 @@ class AdminInterface {
                     <li><?php esc_html_e('✅ Page Builder Integration (Elementor, Bricks, Beaver Builder, Divi, Oxygen)', 'safefonts'); ?></li>
                     <li><?php esc_html_e('✅ Bulk ZIP Package Import from Google Fonts Downloader', 'safefonts'); ?></li>
                     <li><?php esc_html_e('✅ Professional Admin Interface with Drag & Drop', 'safefonts'); ?></li>
-                    <li><?php esc_html_e('✅ REST API Endpoints for External Access', 'safefonts'); ?></li>
                     <li><?php esc_html_e('✅ Advanced Font Management Tools', 'safefonts'); ?></li>
                 </ul>
                 <p style="margin-top: 15px;">
