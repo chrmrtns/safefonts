@@ -350,14 +350,12 @@ class Core {
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
         dbDelta($sql);
 
-        // Check if migration is needed (upgrading from older version)
-        $installed_version = get_option('safefonts_version', '0.0.0');
-        $needs_migration = version_compare($installed_version, '1.1.0', '<');
+        // Always check for fonts needing migration (v1.1.0+)
+        // The method checks if fonts exist in flat structure and only migrates if needed
+        $this->migrate_to_family_folders();
 
-        if ($needs_migration && $installed_version !== '0.0.0') {
-            // Migrate existing fonts to family folders
-            $this->migrate_to_family_folders();
-        }
+        // Update version
+        update_option('safefonts_version', SAFEFONTS_VERSION);
 
         // Set default options
         add_option('safefonts_max_file_size', 2 * 1024 * 1024);
