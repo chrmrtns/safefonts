@@ -24,8 +24,11 @@ define('SAFEFONTS_VERSION', '1.1.0');
 define('SAFEFONTS_PLUGIN_FILE', __FILE__);
 define('SAFEFONTS_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('SAFEFONTS_PLUGIN_URL', plugin_dir_url(__FILE__));
-define('SAFEFONTS_ASSETS_DIR', WP_CONTENT_DIR . '/uploads/safefonts/');
-define('SAFEFONTS_ASSETS_URL', content_url('uploads/safefonts/'));
+
+// Use WordPress upload directory functions for proper compatibility
+$upload_dir = wp_upload_dir();
+define('SAFEFONTS_ASSETS_DIR', $upload_dir['basedir'] . '/safefonts/');
+define('SAFEFONTS_ASSETS_URL', $upload_dir['baseurl'] . '/safefonts/');
 
 // Load PSR-4 Autoloader
 require_once SAFEFONTS_PLUGIN_DIR . 'includes/Autoloader.php';

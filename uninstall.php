@@ -42,7 +42,8 @@ if (!$pro_active) {
     $wpdb->query("DROP TABLE IF EXISTS {$table_name}");
 
     // Delete the uploads directory (shared with Pro)
-    $uploads_dir = WP_CONTENT_DIR . '/uploads/safefonts/';
+    $upload_dir = wp_upload_dir();
+    $uploads_dir = $upload_dir['basedir'] . '/safefonts/';
     if (is_dir($uploads_dir)) {
         safefonts_uninstall_delete_directory($uploads_dir);
     }
