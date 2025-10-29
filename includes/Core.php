@@ -476,7 +476,16 @@ class Core {
 
             // Move file if it exists
             if (file_exists($old_file) && !file_exists($new_file)) {
-                if (rename($old_file, $new_file)) {
+                global $wp_filesystem;
+
+                // Initialize WP_Filesystem
+                if (empty($wp_filesystem)) {
+                    require_once ABSPATH . 'wp-admin/includes/file.php';
+                    WP_Filesystem();
+                }
+
+                // Move file using WordPress Filesystem API
+                if ($wp_filesystem->move($old_file, $new_file, true)) {
                     // Update database with new path and family_slug
                     // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Migration update, one-time operation
                     $wpdb->update(

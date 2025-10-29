@@ -8,13 +8,13 @@ Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Secure local font hosting for WordPress with Gutenberg integration and GDPR compliance. Upload custom fonts with advanced security validation.
+Host custom fonts locally in WordPress with advanced security validation and block editor integration.
 
 == Description ==
 
-**SafeFonts provides secure, GDPR-compliant font management for WordPress with seamless Gutenberg integration.**
+**SafeFonts helps you comply with GDPR by hosting fonts locally and avoiding third-party requests, with seamless Gutenberg integration.**
 
-If you need to host custom fonts locally on your WordPress site for performance, privacy, or GDPR compliance, SafeFonts makes it simple with industry-leading security validation and automatic integration with the WordPress block editor.
+If you need to host custom fonts locally on your WordPress site for performance, privacy, or GDPR compliance, SafeFonts makes it simple with advanced security validation and automatic integration with the WordPress block editor.
 
 = Why Choose SafeFonts? =
 
@@ -27,7 +27,7 @@ If you need to host custom fonts locally on your WordPress site for performance,
 
 **⚡ Fast & Lightweight**
 * Custom database storage for instant queries
-* No impact on page load speed
+* Designed to minimize impact on page load speed
 * Optimized font delivery
 * Works with any theme or page builder
 
@@ -52,10 +52,10 @@ If you need to host custom fonts locally on your WordPress site for performance,
 * Improves Core Web Vitals scores
 
 **🌍 GDPR Compliant**
-* 100% local font hosting
-* No external requests to Google or other CDNs
+* Local font hosting
+* No external font requests—fonts are served entirely from your WordPress installation
 * Complete data privacy
-* EU-ready out of the box
+* Suitable for GDPR-compliant sites
 
 = Perfect For =
 
@@ -71,6 +71,17 @@ If you need to host custom fonts locally on your WordPress site for performance,
 2. **Configure Details**: Set font family name, weight (100-900), and style (normal/italic)
 3. **Use in Gutenberg**: Your fonts automatically appear in the block editor
 4. **That's It!** Fonts are served locally with optimal performance
+
+= Getting Google Fonts =
+
+**Download Google Fonts from:**
+* **SafeFonts Web Font Downloader** - https://webfontdownloader.safefonts.com (convenient bulk download tool)
+* **Google Fonts GitHub** - https://github.com/google/fonts (official repository)
+* **Google Webfonts Helper** - https://gwfh.mranftl.com/fonts (third-party download tool)
+
+Once downloaded, upload the font files (.woff2, .woff, .ttf, .otf) through SafeFonts > Upload tab.
+
+**Need more features?** SafeFonts Pro offers bulk ZIP imports, page builder integration, and advanced font management. Learn more at https://safefonts.com
 
 = Supported Font Formats =
 
@@ -115,7 +126,7 @@ SafeFonts supports WOFF2, WOFF, TTF, and OTF font files. We recommend WOFF2 for 
 
 = Is this GDPR compliant? =
 
-Yes! SafeFonts stores all fonts locally on your server, so no data is sent to external services like Google Fonts. This makes it 100% GDPR compliant.
+Yes! SafeFonts stores all fonts locally on your server, so no data is sent to external services like Google Fonts. This makes it GDPR compliant.
 
 = Does this work with Gutenberg? =
 
@@ -140,7 +151,7 @@ SafeFonts performs multiple security checks:
 
 = Will this slow down my site? =
 
-No! SafeFonts uses a custom database table (not WordPress post meta) for lightning-fast queries. Fonts are served as static CSS files with no JavaScript overhead.
+No! SafeFonts uses a custom database table (not WordPress post meta) for optimized fast queries. Fonts are served as static CSS files with no JavaScript overhead.
 
 = Can I upload Google Fonts? =
 
