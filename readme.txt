@@ -3,7 +3,7 @@ Contributors: chrmrtns
 Tags: fonts, google fonts, custom fonts, typography, gutenberg
 Requires at least: 5.0
 Tested up to: 6.8
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -191,6 +191,11 @@ Yes! Each font has a delete button in the SafeFonts admin interface. Deleting a 
 6. Fonts automatically available in Gutenberg typography settings
 
 == Changelog ==
+
+= 1.1.1 =
+* Fix: Use wp_upload_dir() instead of hardcoded WP_CONTENT_DIR for better compatibility
+* Fix: Ensures proper upload directory detection across all WordPress configurations
+* Compatibility: Addresses WordPress.org plugin review guidelines
 
 = 1.1.0 =
 * NEW: Font family folder organization - fonts now stored in dedicated family folders (e.g., /roboto/, /open-sans/)
