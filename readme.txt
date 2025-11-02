@@ -74,14 +74,15 @@ If you need to host custom fonts locally on your WordPress site for performance,
 
 = Getting Google Fonts =
 
-**Download Google Fonts from:**
-* **SafeFonts Web Font Downloader** - https://webfontdownloader.safefonts.com (convenient bulk download tool)
-* **Google Fonts GitHub** - https://github.com/google/fonts (official repository)
-* **Google Webfonts Helper** - https://gwfh.mranftl.com/fonts (third-party download tool)
+Download Google Fonts from these sources:
+
+* [SafeFonts Web Font Downloader](https://webfontdownloader.safefonts.com) - convenient bulk download tool
+* [Google Fonts GitHub](https://github.com/google/fonts) - official repository
+* [Google Webfonts Helper](https://gwfh.mranftl.com/fonts) - third-party download tool
 
 Once downloaded, upload the font files (.woff2, .woff, .ttf, .otf) through SafeFonts > Upload tab.
 
-**Need more features?** SafeFonts Pro offers bulk ZIP imports, page builder integration, and advanced font management. Learn more at https://safefonts.com
+Need more features? SafeFonts Pro offers bulk ZIP imports, page builder integration, and advanced font management. [Learn more](https://safefonts.com)
 
 = Supported Font Formats =
 
@@ -138,7 +139,7 @@ Absolutely! Uploaded fonts automatically appear in:
 
 = Can I use this with page builders? =
 
-The free version works with Gutenberg. For page builder integration (Elementor, Bricks, Beaver Builder, Divi, Oxygen), check out SafeFonts Pro at https://safefonts.com
+The free version works with Gutenberg. For page builder integration (Elementor, Bricks, Beaver Builder, Divi, Oxygen), check out [SafeFonts Pro](https://safefonts.com).
 
 = How does the security validation work? =
 
@@ -171,7 +172,7 @@ SafeFonts Pro adds:
 * Professional admin interface with drag & drop
 * Advanced font management tools
 
-Learn more at https://safefonts.com
+[Learn more](https://safefonts.com)
 
 = Where are the font files stored? =
 
@@ -350,8 +351,8 @@ SafeFonts uses modern PHP namespaces and PSR-4 autoloading:
 == Support ==
 
 For support, feature requests, or bug reports, please visit:
-* GitHub: https://github.com/chrmrtns/safefonts
-* Website: https://safefonts.com
+* [GitHub](https://github.com/chrmrtns/safefonts)
+* [Website](https://safefonts.com)
 
 == Privacy Policy ==
 
