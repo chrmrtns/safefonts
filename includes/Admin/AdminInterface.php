@@ -114,6 +114,19 @@ class AdminInterface {
             return;
         }
 
+        // Enqueue fonts.css for font previews in admin
+        $fonts_css_file = SAFEFONTS_PLUGIN_DIR . 'assets/css/fonts.css';
+        $fonts_css_url = SAFEFONTS_PLUGIN_URL . 'assets/css/fonts.css';
+
+        if (file_exists($fonts_css_file)) {
+            wp_enqueue_style(
+                'safefonts-fonts',
+                $fonts_css_url,
+                array(),
+                filemtime($fonts_css_file)
+            );
+        }
+
         wp_enqueue_style(
             'safefonts-admin',
             SAFEFONTS_PLUGIN_URL . 'assets/css/admin.css',

@@ -3,7 +3,7 @@ Contributors: chrmrtns
 Tags: fonts, google fonts, custom fonts, typography, gutenberg
 Requires at least: 5.0
 Tested up to: 6.8
-Stable tag: 1.1.2
+Stable tag: 1.1.3
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -192,6 +192,11 @@ Yes! Each font has a delete button in the SafeFonts admin interface. Deleting a 
 6. Fonts automatically available in Gutenberg typography settings
 
 == Changelog ==
+
+= 1.1.3 =
+* Fix: Font previews now display correctly in admin area
+* Improved: Enqueue fonts.css in admin for proper font preview rendering
+* Enhancement: Fonts now visible in SafeFonts > Fonts admin page preview
 
 = 1.1.2 =
 * Fix: Fonts now display correctly in Gutenberg block editor
