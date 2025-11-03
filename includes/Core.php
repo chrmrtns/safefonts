@@ -215,10 +215,10 @@ class Core {
 
         // Add fonts.css to editor
         $fonts_css_file = SAFEFONTS_PLUGIN_DIR . 'assets/css/fonts.css';
+        $fonts_css_url = SAFEFONTS_PLUGIN_URL . 'assets/css/fonts.css';
 
         if (file_exists($fonts_css_file)) {
-            // Use relative path from theme directory for add_editor_style
-            $fonts_css_url = str_replace(ABSPATH, '', $fonts_css_file);
+            // Use full URL for add_editor_style for consistent cross-environment support
             add_editor_style($fonts_css_url);
         }
     }
