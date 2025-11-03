@@ -86,6 +86,9 @@ class Core {
         // Register fonts with Gutenberg editor
         add_filter('block_editor_settings_all', array($this, 'register_fonts_with_editor'), 10, 2);
 
+        // Add fonts.css to editor styles for iframe preview
+        add_action('after_setup_theme', array($this, 'add_editor_styles'));
+
         // Font Library integration (WordPress 6.5+)
         if (function_exists('wp_register_font_collection')) {
             add_action('init', array($this, 'register_font_collection'));
@@ -199,6 +202,25 @@ class Core {
         $mimes['otf'] = 'font/otf';
 
         return $mimes;
+    }
+
+    /**
+     * Add fonts.css to editor styles for Gutenberg iframe preview
+     *
+     * @return void
+     */
+    public function add_editor_styles() {
+        // Enable editor styles
+        add_theme_support('editor-styles');
+
+        // Add fonts.css to editor
+        $fonts_css_file = SAFEFONTS_PLUGIN_DIR . 'assets/css/fonts.css';
+
+        if (file_exists($fonts_css_file)) {
+            // Use relative path from theme directory for add_editor_style
+            $fonts_css_url = str_replace(ABSPATH, '', $fonts_css_file);
+            add_editor_style($fonts_css_url);
+        }
     }
 
     /**
