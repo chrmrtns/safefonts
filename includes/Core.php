@@ -350,6 +350,13 @@ class Core {
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
         dbDelta($sql);
 
+        // Migration check: Add family_slug column if it doesn't exist (v1.1.0+)
+        $columns = $wpdb->get_col("DESCRIBE {$table_name}"); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Migration check, runs once on activation
+        if (!in_array('family_slug', $columns, true)) {
+            $wpdb->query("ALTER TABLE {$table_name} ADD COLUMN family_slug varchar(255) NOT NULL DEFAULT '' AFTER font_family"); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Adding missing column for migration
+            $wpdb->query("ALTER TABLE {$table_name} ADD KEY family_slug (family_slug)"); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Adding index for new column
+        }
+
         // Always check for fonts needing migration (v1.1.0+)
         // The method checks if fonts exist in flat structure and only migrates if needed
         $this->migrate_to_family_folders();

@@ -100,6 +100,9 @@ class FontManager {
 
         $css = "/* SafeFonts - Generated CSS */\n";
         $css .= "/* Generated: " . current_time('mysql') . " */\n\n";
+        $css .= "/* ================================= */\n";
+        $css .= "/*   FONT FACE DECLARATIONS         */\n";
+        $css .= "/* ================================= */\n\n";
 
         foreach ($fonts as $font) {
             // Use relative path from database (includes family folder if present)
@@ -112,6 +115,21 @@ class FontManager {
             $css .= "  font-weight: " . esc_attr($font->font_weight) . ";\n";
             $css .= "  font-display: swap;\n";
             $css .= "  src: url('" . esc_url($font_url) . "') format('" . $format . "');\n";
+            $css .= "}\n\n";
+        }
+
+        // Generate Gutenberg CSS classes
+        $css .= "/* ================================= */\n";
+        $css .= "/*   GUTENBERG FONT FAMILY CLASSES  */\n";
+        $css .= "/* ================================= */\n\n";
+
+        $fonts_by_family = $this->get_fonts_by_family();
+        foreach ($fonts_by_family as $family => $variants) {
+            $slug = sanitize_title($family);
+            $fallback = $this->get_font_fallback($family);
+
+            $css .= ".has-" . $slug . "-font-family {\n";
+            $css .= "  font-family: '" . esc_attr($family) . "'" . $fallback . ";\n";
             $css .= "}\n\n";
         }
 
@@ -143,7 +161,15 @@ class FontManager {
         // Create family folder if it doesn't exist
         $family_dir = SAFEFONTS_ASSETS_DIR . $family_slug . '/';
         if (!file_exists($family_dir)) {
-            wp_mkdir_p($family_dir);
+            if (!wp_mkdir_p($family_dir)) {
+                return new \WP_Error('mkdir_failed', __('Failed to create font family directory.', 'safefonts'));
+            }
+        }
+
+        // Verify directory is writable
+        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_is_writable -- Simple permission check before file operations
+        if (!is_writable($family_dir)) {
+            return new \WP_Error('dir_not_writable', __('Font directory is not writable. Check file permissions.', 'safefonts'));
         }
 
         // Generate safe filename
@@ -154,9 +180,22 @@ class FontManager {
         $destination = SAFEFONTS_ASSETS_DIR . $relative_path;
 
         // Copy file to assets directory
-        if (!copy($font_file_path, $destination)) {
-            return new \WP_Error('copy_failed', __('Failed to copy font file.', 'safefonts'));
+        // Use @ to suppress PHP warnings and check result properly
+        $copy_result = @copy($font_file_path, $destination);
+
+        if (!$copy_result) {
+            $error_msg = error_get_last();
+            return new \WP_Error('copy_failed', __('Failed to copy font file.', 'safefonts') . ' ' . ($error_msg ? $error_msg['message'] : ''));
         }
+
+        // Verify file was actually copied
+        if (!file_exists($destination)) {
+            return new \WP_Error('file_not_copied', __('Font file was not copied to destination.', 'safefonts'));
+        }
+
+        // Set proper file permissions
+        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- Setting secure file permissions for uploaded font
+        chmod($destination, 0644);
 
         // Save to database
         global $wpdb;
@@ -316,6 +355,44 @@ class FontManager {
         );
 
         return $formats[$extension] ?? 'truetype';
+    }
+
+    /**
+     * Get appropriate fallback fonts based on font family name
+     *
+     * @param string $family_name Font family name
+     * @return string Fallback font stack
+     */
+    private function get_font_fallback($family_name) {
+        $family_lower = strtolower($family_name);
+
+        // Monospace fonts
+        if (strpos($family_lower, 'mono') !== false ||
+            strpos($family_lower, 'code') !== false ||
+            strpos($family_lower, 'courier') !== false ||
+            strpos($family_lower, 'console') !== false) {
+            return ', monospace';
+        }
+
+        // Serif fonts
+        if (strpos($family_lower, 'serif') !== false ||
+            strpos($family_lower, 'times') !== false ||
+            strpos($family_lower, 'garamond') !== false ||
+            strpos($family_lower, 'baskerville') !== false ||
+            strpos($family_lower, 'caslon') !== false) {
+            return ', serif';
+        }
+
+        // Cursive/handwriting fonts
+        if (strpos($family_lower, 'script') !== false ||
+            strpos($family_lower, 'cursive') !== false ||
+            strpos($family_lower, 'handwriting') !== false ||
+            strpos($family_lower, 'brush') !== false) {
+            return ', cursive, sans-serif';
+        }
+
+        // Default to sans-serif
+        return ', sans-serif';
     }
 
     /**

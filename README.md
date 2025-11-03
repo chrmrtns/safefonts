@@ -174,6 +174,14 @@ Fonts are stored in `wp-content/uploads/safefonts/` directory and registered in 
 
 ## 📝 Changelog
 
+### 1.1.2
+- Fix: Fonts now display correctly in Gutenberg block editor
+- NEW: Generate .has-{slug}-font-family CSS classes for Gutenberg typography controls
+- NEW: Intelligent font fallback detection (serif, sans-serif, monospace, cursive)
+- Fix: Database migration now properly adds family_slug column for users upgrading from v1.0.x
+- Improved: Enhanced error handling for font uploads with detailed error messages
+- Improved: Better directory writability checks before file operations
+
 ### 1.0.9
 - Fixed: Removed manual load_plugin_textdomain() per WordPress.org guidelines
 - Improved: Help & Documentation page now uses CSS tabs for better organization

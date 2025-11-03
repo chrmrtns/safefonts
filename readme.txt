@@ -3,7 +3,7 @@ Contributors: chrmrtns
 Tags: fonts, google fonts, custom fonts, typography, gutenberg
 Requires at least: 5.0
 Tested up to: 6.8
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -192,6 +192,15 @@ Yes! Each font has a delete button in the SafeFonts admin interface. Deleting a 
 6. Fonts automatically available in Gutenberg typography settings
 
 == Changelog ==
+
+= 1.1.2 =
+* Fix: Fonts now display correctly in Gutenberg block editor
+* NEW: Generate .has-{slug}-font-family CSS classes for Gutenberg typography controls
+* NEW: Intelligent font fallback detection (serif, sans-serif, monospace, cursive)
+* Fix: Database migration now properly adds family_slug column for users upgrading from v1.0.x
+* Improved: Enhanced error handling for font uploads with detailed error messages
+* Improved: Better directory writability checks before file operations
+* Technical: Added PHPCS ignore comments for legitimate direct filesystem operations
 
 = 1.1.1 =
 * Fix: Use wp_upload_dir() instead of hardcoded WP_CONTENT_DIR for better compatibility
