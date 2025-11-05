@@ -64,6 +64,9 @@ class Core {
      * @return void
      */
     private function init() {
+        // Check for version updates and run migrations if needed
+        add_action('plugins_loaded', array($this, 'check_version_and_migrate'), 1);
+
         // Ensure uploads directory exists
         add_action('admin_init', array($this, 'ensure_uploads_directory'));
         add_action('admin_notices', array($this, 'show_directory_notices'));
@@ -78,6 +81,7 @@ class Core {
         // Register hooks
         add_action('wp_enqueue_scripts', array($this, 'enqueue_fonts'));
         add_action('enqueue_block_editor_assets', array($this, 'enqueue_fonts'));
+        add_action('admin_enqueue_scripts', array($this, 'enqueue_fonts_admin'));
         add_action('wp_head', array($this, 'add_font_preload_tags'), 1);
 
         // Allow font file uploads
@@ -97,6 +101,38 @@ class Core {
         // Register activation/deactivation hooks
         register_activation_hook(SAFEFONTS_PLUGIN_DIR . 'safefonts.php', array($this, 'activate'));
         register_deactivation_hook(SAFEFONTS_PLUGIN_DIR . 'safefonts.php', array($this, 'deactivate'));
+    }
+
+    /**
+     * Check version and run migrations if needed
+     * Runs on every page load but only performs migration once per version
+     *
+     * @return void
+     */
+    public function check_version_and_migrate() {
+        $stored_version = get_option('safefonts_version', '0.0.0');
+
+        // Only run if version has changed
+        if (version_compare($stored_version, SAFEFONTS_VERSION, '<')) {
+            // Version 1.1.0+ migrations
+            if (version_compare($stored_version, '1.1.0', '<')) {
+                // Ensure database has family_slug column
+                global $wpdb;
+                $table_name = $wpdb->prefix . 'chrmrtns_safefonts';
+                $columns = $wpdb->get_col("DESCRIBE {$table_name}"); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+
+                if (!in_array('family_slug', $columns, true)) {
+                    $wpdb->query("ALTER TABLE {$table_name} ADD COLUMN family_slug varchar(255) NOT NULL DEFAULT '' AFTER font_family"); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                    $wpdb->query("ALTER TABLE {$table_name} ADD KEY family_slug (family_slug)"); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                }
+
+                // Run folder migration
+                $this->migrate_to_family_folders();
+            }
+
+            // Update stored version
+            update_option('safefonts_version', SAFEFONTS_VERSION);
+        }
     }
 
     /**
@@ -121,6 +157,19 @@ class Core {
                 array(),
                 filemtime($fonts_css_file)
             );
+        }
+    }
+
+    /**
+     * Enqueue fonts CSS in admin area (for font previews)
+     *
+     * @return void
+     */
+    public function enqueue_fonts_admin() {
+        // Only load on SafeFonts admin pages
+        $screen = get_current_screen();
+        if ($screen && strpos($screen->id, 'safefonts') !== false) {
+            $this->enqueue_fonts();
         }
     }
 
@@ -533,13 +582,17 @@ class Core {
             }
         }
 
-        if ($migrated_count > 0) {
+        // Always regenerate CSS after migration check, even if no files moved
+        // (in case database was updated but CSS wasn't regenerated)
+        if (!empty($fonts)) {
             // Clear fonts cache
             delete_transient('safefonts_fonts_list_v' . SAFEFONTS_VERSION);
 
             // Regenerate fonts.css
             $this->generate_fonts_css();
+        }
 
+        if ($migrated_count > 0) {
             // Add admin notice
             add_option('safefonts_family_folders_migrated_count', $migrated_count);
         }

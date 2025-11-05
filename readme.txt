@@ -3,7 +3,7 @@ Contributors: chrmrtns
 Tags: fonts, google fonts, custom fonts, typography, gutenberg
 Requires at least: 5.0
 Tested up to: 6.8
-Stable tag: 1.1.4
+Stable tag: 1.1.5
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -192,6 +192,21 @@ Yes! Each font has a delete button in the SafeFonts admin interface. Deleting a 
 6. Fonts automatically available in Gutenberg typography settings
 
 == Changelog ==
+
+= 1.1.5 =
+* CRITICAL FIX: Migration now runs automatically on plugin update (no longer requires deactivate/reactivate)
+* NEW: Bulk delete functionality - select multiple fonts and delete them at once with "Select All" option
+* NEW: Font format display - shows WOFF2, WOFF, TTF, or OTF badge in fonts list for better visibility
+* Fix: Font previews now display correctly in admin area (fonts.css properly enqueued)
+* Fix: Folder structure migration triggers on version change, not just activation
+* Fix: CSS file regeneration after migration ensures fonts display immediately
+* Fix: Browser cache issues with admin CSS/JS files using file modification timestamps
+* Improvement: Version check system ensures migrations run once per version upgrade
+* Improvement: Enhanced fonts list UI with checkboxes for individual selection
+* Improvement: Cleaned up font list layout for better readability (removed grid conflicts)
+* Technical: Added check_version_and_migrate() method that runs on plugins_loaded hook
+* Technical: Added handle_bulk_font_deletion() AJAX handler for bulk operations
+* Technical: CSS cache-busting using filemtime() for instant updates
 
 = 1.1.4 =
 * Fix: Fonts now display correctly in Gutenberg editor iframe preview

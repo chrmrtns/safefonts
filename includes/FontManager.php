@@ -46,6 +46,7 @@ class FontManager {
     public function __construct() {
         add_action('wp_ajax_safefonts_upload_font', array($this, 'handle_single_font_upload'));
         add_action('wp_ajax_safefonts_delete_font', array($this, 'handle_font_deletion'));
+        add_action('wp_ajax_safefonts_bulk_delete_fonts', array($this, 'handle_bulk_font_deletion'));
     }
 
     /**
@@ -528,5 +529,104 @@ class FontManager {
         $this->regenerate_fonts_css();
 
         wp_send_json_success(__('Font deleted successfully.', 'safefonts'));
+    }
+
+    /**
+     * Handle bulk font deletion
+     */
+    public function handle_bulk_font_deletion() {
+        // Verify nonce and capabilities
+        if (!current_user_can('manage_options') ||
+            !isset($_POST['nonce']) ||
+            !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'safefonts_bulk_delete')) {
+            wp_die(esc_html__('Security check failed.', 'safefonts'));
+        }
+
+        if (!isset($_POST['font_ids']) || !is_array($_POST['font_ids'])) {
+            wp_send_json_error(__('No fonts selected.', 'safefonts'));
+        }
+
+        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Array of integers sanitized below
+        $font_ids = array_map('intval', wp_unslash($_POST['font_ids']));
+
+        if (empty($font_ids)) {
+            wp_send_json_error(__('No valid font IDs provided.', 'safefonts'));
+        }
+
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'chrmrtns_safefonts';
+
+        $deleted_count = 0;
+        $empty_folders = array();
+
+        foreach ($font_ids as $font_id) {
+            // Get font info
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Table name is safe (prefix + hardcoded), single row query
+            $font = $wpdb->get_row(
+                $wpdb->prepare(
+                    "SELECT * FROM {$table_name} WHERE id = %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                    $font_id
+                )
+            );
+
+            if (!$font) {
+                continue;
+            }
+
+            // Delete file
+            $file_path = SAFEFONTS_ASSETS_DIR . $font->file_path;
+            if (file_exists($file_path)) {
+                wp_delete_file($file_path);
+            }
+
+            // Track family folder for cleanup
+            $family_dir = dirname($file_path);
+            if ($family_dir !== SAFEFONTS_ASSETS_DIR && !in_array($family_dir, $empty_folders, true)) {
+                $empty_folders[] = $family_dir;
+            }
+
+            // Delete from database
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom table delete, cache cleared after
+            $result = $wpdb->delete($table_name, array('id' => $font_id));
+
+            if ($result !== false) {
+                $deleted_count++;
+            }
+        }
+
+        // Cleanup empty family folders
+        foreach ($empty_folders as $family_dir) {
+            if (is_dir($family_dir)) {
+                // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_readdir -- Required for directory cleanup check
+                $files = scandir($family_dir);
+                $files = array_diff($files, array('.', '..', 'index.php', '.htaccess'));
+
+                if (empty($files)) {
+                    // Remove index.php if exists
+                    $index_file = $family_dir . '/index.php';
+                    if (file_exists($index_file)) {
+                        wp_delete_file($index_file);
+                    }
+
+                    // Remove directory
+                    // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir -- Required for cleanup
+                    @rmdir($family_dir);
+                }
+            }
+        }
+
+        // Clear cache
+        $this->clear_fonts_cache();
+
+        // Regenerate fonts.css
+        $this->regenerate_fonts_css();
+
+        /* translators: %d: number of fonts deleted */
+        $message = sprintf(_n('%d font deleted successfully.', '%d fonts deleted successfully.', $deleted_count, 'safefonts'), $deleted_count);
+
+        wp_send_json_success(array(
+            'message' => $message,
+            'deleted_count' => $deleted_count
+        ));
     }
 }

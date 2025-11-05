@@ -88,6 +88,55 @@
     box-shadow: 0 1px 1px rgba(0,0,0,.04);
 }
 
+.safefonts-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f0f0f1;
+}
+
+.safefonts-list-header h3 {
+    margin: 0;
+}
+
+.safefonts-bulk-actions {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.safefonts-bulk-actions label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    color: #1d2327;
+}
+
+.safefonts-bulk-actions input[type="checkbox"] {
+    cursor: pointer;
+    margin: 0;
+}
+
+#safefonts-delete-selected {
+    background: #d63638 !important;
+    border-color: #d63638 !important;
+    color: #fff !important;
+}
+
+#safefonts-delete-selected:hover:not(:disabled) {
+    background: #b32d2e !important;
+    border-color: #b32d2e !important;
+}
+
+#safefonts-delete-selected:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 .safefonts-font-family {
     border-bottom: 1px solid #f0f0f1;
     padding-bottom: 20px;
@@ -118,13 +167,24 @@
     border: 1px solid #dcdcde;
     border-radius: 4px;
     padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .safefonts-font-info {
     display: flex;
-    gap: 15px;
-    margin-bottom: 10px;
+    gap: 10px;
     flex-wrap: wrap;
+    align-items: center;
+}
+
+.safefonts-font-info input[type="checkbox"] {
+    cursor: pointer;
+    margin: 0;
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
 }
 
 .safefonts-font-info span {
@@ -144,6 +204,10 @@
     background: #00a32a !important;
 }
 
+.safefonts-font-format {
+    background: #2271b1 !important;
+}
+
 .safefonts-font-size {
     background: #646970 !important;
 }
@@ -151,18 +215,19 @@
 .safefonts-font-preview {
     font-size: 18px;
     line-height: 1.4;
-    margin: 10px 0;
     padding: 10px;
     background: #fff;
     border: 1px solid #dcdcde;
     border-radius: 3px;
     color: #1d2327;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .safefonts-font-actions {
     display: flex;
     gap: 10px;
-    margin-top: 10px;
+    width: 100%;
 }
 
 .safefonts-delete-font {
@@ -288,6 +353,22 @@
 
 /* Responsive Design */
 @media screen and (max-width: 782px) {
+    .safefonts-list-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .safefonts-bulk-actions {
+        width: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    #safefonts-delete-selected {
+        width: 100%;
+    }
+
     .safefonts-font-info {
         flex-direction: column;
         gap: 8px;

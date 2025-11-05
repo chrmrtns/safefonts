@@ -131,14 +131,14 @@ class AdminInterface {
             'safefonts-admin',
             SAFEFONTS_PLUGIN_URL . 'assets/css/admin.css',
             array(),
-            SAFEFONTS_VERSION
+            SAFEFONTS_VERSION . '-' . filemtime(SAFEFONTS_PLUGIN_DIR . 'assets/css/admin.css')
         );
 
         wp_enqueue_script(
             'safefonts-admin',
             SAFEFONTS_PLUGIN_URL . 'assets/js/admin.js',
             array('jquery'),
-            SAFEFONTS_VERSION,
+            SAFEFONTS_VERSION . '-' . filemtime(SAFEFONTS_PLUGIN_DIR . 'assets/js/admin.js'),
             true
         );
 
@@ -355,9 +355,25 @@ class AdminInterface {
         }
 
         $delete_nonce = wp_create_nonce('safefonts_delete');
+        $bulk_delete_nonce = wp_create_nonce('safefonts_bulk_delete');
         ?>
         <div class="safefonts-fonts-list">
-            <h3><?php esc_html_e('Installed Fonts', 'safefonts'); ?></h3>
+            <div class="safefonts-list-header">
+                <h3><?php esc_html_e('Installed Fonts', 'safefonts'); ?></h3>
+                <div class="safefonts-bulk-actions">
+                    <label>
+                        <input type="checkbox" id="safefonts-select-all">
+                        <?php esc_html_e('Select All', 'safefonts'); ?>
+                    </label>
+                    <button type="button"
+                            id="safefonts-delete-selected"
+                            class="button button-secondary"
+                            data-nonce="<?php echo esc_attr($bulk_delete_nonce); ?>"
+                            disabled>
+                        <?php esc_html_e('Delete Selected', 'safefonts'); ?>
+                    </button>
+                </div>
+            </div>
 
             <?php foreach ($fonts as $family => $family_fonts): ?>
                 <div class="safefonts-font-family">
@@ -369,8 +385,16 @@ class AdminInterface {
                         <?php foreach ($family_fonts as $font): ?>
                             <div class="safefonts-font-item">
                                 <div class="safefonts-font-info">
+                                    <input type="checkbox"
+                                           class="safefonts-font-select"
+                                           value="<?php echo esc_attr($font->id); ?>"
+                                           data-family="<?php echo esc_attr($font->font_family); ?>">
                                     <span class="safefonts-font-weight"><?php echo esc_html($font->font_weight); ?></span>
                                     <span class="safefonts-font-style"><?php echo esc_html($font->font_style); ?></span>
+                                    <?php
+                                    $font_format = strtoupper(pathinfo($font->file_path, PATHINFO_EXTENSION));
+                                    ?>
+                                    <span class="safefonts-font-format"><?php echo esc_html($font_format); ?></span>
                                     <span class="safefonts-font-size"><?php echo esc_html(size_format($font->file_size)); ?></span>
                                 </div>
 

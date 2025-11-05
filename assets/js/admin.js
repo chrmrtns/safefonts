@@ -9,6 +9,7 @@
         init: function() {
             this.initUploadForm();
             this.initFontDeletion();
+            this.initBulkActions();
             this.initTabs();
         },
 
@@ -41,6 +42,119 @@
                 const nonce = $button.data('nonce');
 
                 SafeFontsAdmin.deleteFont(fontId, nonce, $button);
+            });
+        },
+
+        initBulkActions: function() {
+            // Select All checkbox
+            $('#safefonts-select-all').on('change', function() {
+                const isChecked = $(this).prop('checked');
+                $('.safefonts-font-select').prop('checked', isChecked);
+                SafeFontsAdmin.updateBulkDeleteButton();
+            });
+
+            // Individual checkbox change
+            $(document).on('change', '.safefonts-font-select', function() {
+                SafeFontsAdmin.updateBulkDeleteButton();
+
+                // Update "Select All" state
+                const totalCheckboxes = $('.safefonts-font-select').length;
+                const checkedCheckboxes = $('.safefonts-font-select:checked').length;
+                $('#safefonts-select-all').prop('checked', totalCheckboxes === checkedCheckboxes);
+            });
+
+            // Delete selected button
+            $('#safefonts-delete-selected').on('click', function(e) {
+                e.preventDefault();
+                SafeFontsAdmin.handleBulkDelete();
+            });
+        },
+
+        updateBulkDeleteButton: function() {
+            const selectedCount = $('.safefonts-font-select:checked').length;
+            const $button = $('#safefonts-delete-selected');
+
+            if (selectedCount > 0) {
+                $button.prop('disabled', false);
+                $button.text('Delete Selected (' + selectedCount + ')');
+            } else {
+                $button.prop('disabled', true);
+                $button.text('Delete Selected');
+            }
+        },
+
+        handleBulkDelete: function() {
+            const selectedFonts = [];
+            $('.safefonts-font-select:checked').each(function() {
+                selectedFonts.push($(this).val());
+            });
+
+            if (selectedFonts.length === 0) {
+                return;
+            }
+
+            const confirmMsg = selectedFonts.length === 1
+                ? 'Are you sure you want to delete this font?'
+                : 'Are you sure you want to delete ' + selectedFonts.length + ' fonts?';
+
+            if (!confirm(confirmMsg)) {
+                return;
+            }
+
+            const $button = $('#safefonts-delete-selected');
+            const nonce = $button.data('nonce');
+
+            $button.prop('disabled', true).text('Deleting...');
+
+            $.ajax({
+                url: safefontsAjax.ajaxurl,
+                type: 'POST',
+                data: {
+                    action: 'safefonts_bulk_delete_fonts',
+                    font_ids: selectedFonts,
+                    nonce: nonce
+                },
+                success: function(response) {
+                    if (response.success) {
+                        // Remove deleted fonts from UI
+                        selectedFonts.forEach(function(fontId) {
+                            const $checkbox = $('.safefonts-font-select[value="' + fontId + '"]');
+                            const $fontItem = $checkbox.closest('.safefonts-font-item');
+
+                            $fontItem.fadeOut(300, function() {
+                                $(this).remove();
+
+                                // Check if family is now empty
+                                const $family = $fontItem.closest('.safefonts-font-family');
+                                if ($family.find('.safefonts-font-item').length === 0) {
+                                    $family.fadeOut(300, function() {
+                                        $(this).remove();
+                                    });
+                                }
+                            });
+                        });
+
+                        // Reset select all
+                        $('#safefonts-select-all').prop('checked', false);
+
+                        // Show success message
+                        alert(response.data.message);
+
+                        // Reload page after short delay
+                        setTimeout(function() {
+                            location.reload();
+                        }, 1500);
+                    } else {
+                        alert('Error: ' + response.data);
+                        $button.prop('disabled', false);
+                        SafeFontsAdmin.updateBulkDeleteButton();
+                    }
+                },
+                error: function() {
+                    alert('Failed to delete fonts.');
+                    $button.prop('disabled', false);
+                    SafeFontsAdmin.updateBulkDeleteButton();
+                }
             });
         },
 
