@@ -1,9 +1,9 @@
 === SafeFonts ===
 Contributors: chrmrtns
 Tags: fonts, google fonts, custom fonts, typography, gutenberg
-Requires at least: 5.0
+Requires at least: 6.2
 Tested up to: 6.8
-Stable tag: 1.1.5
+Stable tag: 1.1.7
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -36,6 +36,12 @@ If you need to host custom fonts locally on your WordPress site for performance,
 * WordPress 6.5+ Font Library support
 * Works with all blocks that support typography
 * No configuration needed
+
+**🎥 Quick Start Video**
+
+[youtube https://youtu.be/aktC4iLSwpI]
+
+Watch this quick tutorial to see how easy it is to upload and use custom fonts in WordPress.
 
 **🎯 Simple Upload Process**
 * Individual font file uploads (.woff2, .woff, .ttf, .otf)
@@ -139,7 +145,7 @@ Absolutely! Uploaded fonts automatically appear in:
 
 = Can I use this with page builders? =
 
-The free version works with Gutenberg. For page builder integration (Elementor, Bricks, Beaver Builder, Divi, Oxygen), check out [SafeFonts Pro](https://safefonts.com).
+The free version works with Gutenberg. For page builder and theme integration (Elementor, Bricks, Beaver Builder, Divi, Oxygen, Brizy, GeneratePress, GenerateBlocks), check out [SafeFonts Pro](https://safefonts.com).
 
 = How does the security validation work? =
 
@@ -167,10 +173,10 @@ SafeFonts Free includes:
 * WordPress 6.5+ Font Library support
 
 SafeFonts Pro adds:
-* Page builder integration (Elementor, Bricks, Beaver Builder, Divi, Oxygen)
+* Page builder & theme integration (8 integrations: Elementor, Bricks, Beaver Builder, Divi, Oxygen, Brizy, GeneratePress, GenerateBlocks)
 * Bulk ZIP package imports from Google Fonts Downloader
-* Professional admin interface with drag & drop
-* Advanced font management tools
+* Enhanced admin interface with bulk operations
+* Advanced font management tools (family deletion, Brizy sync, etc.)
 
 [Learn more](https://safefonts.com)
 
@@ -192,6 +198,29 @@ Yes! Each font has a delete button in the SafeFonts admin interface. Deleting a 
 6. Fonts automatically available in Gutenberg typography settings
 
 == Changelog ==
+
+= 1.1.7 =
+* FIX: WordPress Font Collection registration now uses correct data structure with font_family_settings wrapper, resolving Site Editor JavaScript errors
+* FIX: Font families now include proper fallback categories (serif, sans-serif, monospace, cursive, fantasy) in Font Library
+* IMPROVEMENT: Enhanced compatibility with FSE themes and Site Editor font management
+
+= 1.1.6 =
+* MAJOR: Full prefix refactoring - all PHP elements now use chrmrtns_safefonts_ prefix for better namespace isolation
+* NEW: Per-weight font preloading - select specific font weights instead of entire families
+* NEW: File format display in preload UI - shows WOFF2, WOFF, TTF, OTF for each weight option
+* FIX: WordPress Plugin Check 1.7.0 compliance - all variables properly prefixed
+* FIX: Database query security - table names now properly escaped using %i placeholder
+* FIX: Form field prefix mismatch - preload settings now save correctly
+* IMPROVEMENT: Automatic migration from old safefonts_ prefix to new chrmrtns_safefonts_ prefix
+* IMPROVEMENT: Collapsible font family sections in preload settings for better organization
+* IMPROVEMENT: Enhanced uninstall.php with proper variable prefixing
+* Technical: Constants renamed (SAFEFONTS_* → CHRMRTNS_SAFEFONTS_*)
+* Technical: Function renamed (safefonts() → chrmrtns_safefonts())
+* Technical: Options migrated (safefonts_version → chrmrtns_safefonts_version, etc.)
+* Technical: New FontPreloader class extracted from Core for better code organization
+* Technical: CSS class names remain safefonts- for backwards compatibility
+* Security: All SQL queries now use WordPress 6.2+ $wpdb->prepare() with %i for table identifiers
+* Security: WordPress minimum requirement bumped to 6.2 (required for %i placeholder support)
 
 = 1.1.5 =
 * CRITICAL FIX: Migration now runs automatically on plugin update (no longer requires deactivate/reactivate)

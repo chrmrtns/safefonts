@@ -5,19 +5,19 @@ if (!defined('ABSPATH')) {
 }
 
 // Get plugin stats
-$font_manager = safefonts()->font_manager;
-$fonts = $font_manager->get_fonts_by_family();
-$font_count = count($fonts);
+$chrmrtns_safefonts_font_manager = chrmrtns_safefonts()->font_manager;
+$chrmrtns_safefonts_fonts = $chrmrtns_safefonts_font_manager->get_fonts_by_family();
+$chrmrtns_safefonts_font_count = count($chrmrtns_safefonts_fonts);
 
 global $wpdb;
-$table_name = $wpdb->prefix . 'chrmrtns_safefonts';
-// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Simple count query
-$total_files = $wpdb->get_var("SELECT COUNT(*) FROM {$table_name}");
+$chrmrtns_safefonts_table_name = $wpdb->prefix . 'chrmrtns_safefonts';
+// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Simple count query
+$chrmrtns_safefonts_total_files = $wpdb->get_var($wpdb->prepare('SELECT COUNT(*) FROM %i', $chrmrtns_safefonts_table_name));
 ?>
 
 <div class="wrap safefonts-admin-wrap">
     <h1 class="safefonts-admin-title">
-        <img src="<?php echo esc_url(SAFEFONTS_PLUGIN_URL . 'assets/images/logo.png'); ?>"
+        <img src="<?php echo esc_url(CHRMRTNS_SAFEFONTS_PLUGIN_URL . 'assets/images/logo.png'); ?>"
              alt="SafeFonts"
              class="safefonts-logo">
         <?php esc_html_e('Welcome to SafeFonts', 'safefonts'); ?>
@@ -35,11 +35,11 @@ $total_files = $wpdb->get_var("SELECT COUNT(*) FROM {$table_name}");
         <!-- Quick Stats -->
         <div class="safefonts-dashboard-stats">
             <div class="safefonts-stat-card">
-                <div class="safefonts-stat-number"><?php echo esc_html($font_count); ?></div>
+                <div class="safefonts-stat-number"><?php echo esc_html($chrmrtns_safefonts_font_count); ?></div>
                 <div class="safefonts-stat-label"><?php esc_html_e('Font Families', 'safefonts'); ?></div>
             </div>
             <div class="safefonts-stat-card">
-                <div class="safefonts-stat-number"><?php echo esc_html($total_files); ?></div>
+                <div class="safefonts-stat-number"><?php echo esc_html($chrmrtns_safefonts_total_files); ?></div>
                 <div class="safefonts-stat-label"><?php esc_html_e('Font Files', 'safefonts'); ?></div>
             </div>
             <div class="safefonts-stat-card">
@@ -79,7 +79,7 @@ $total_files = $wpdb->get_var("SELECT COUNT(*) FROM {$table_name}");
         </div>
 
         <!-- Getting Started -->
-        <?php if ($font_count === 0): ?>
+        <?php if ($chrmrtns_safefonts_font_count === 0): ?>
         <div class="safefonts-dashboard-getting-started">
             <h3><?php esc_html_e('🎯 Getting Started', 'safefonts'); ?></h3>
             <ol class="safefonts-steps">

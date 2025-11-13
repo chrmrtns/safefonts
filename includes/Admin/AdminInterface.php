@@ -115,8 +115,8 @@ class AdminInterface {
         }
 
         // Enqueue fonts.css for font previews in admin
-        $fonts_css_file = SAFEFONTS_PLUGIN_DIR . 'assets/css/fonts.css';
-        $fonts_css_url = SAFEFONTS_PLUGIN_URL . 'assets/css/fonts.css';
+        $fonts_css_file = CHRMRTNS_SAFEFONTS_PLUGIN_DIR . 'assets/css/fonts.css';
+        $fonts_css_url = CHRMRTNS_SAFEFONTS_PLUGIN_URL . 'assets/css/fonts.css';
 
         if (file_exists($fonts_css_file)) {
             wp_enqueue_style(
@@ -129,22 +129,22 @@ class AdminInterface {
 
         wp_enqueue_style(
             'safefonts-admin',
-            SAFEFONTS_PLUGIN_URL . 'assets/css/admin.css',
+            CHRMRTNS_SAFEFONTS_PLUGIN_URL . 'assets/css/admin.css',
             array(),
-            SAFEFONTS_VERSION . '-' . filemtime(SAFEFONTS_PLUGIN_DIR . 'assets/css/admin.css')
+            CHRMRTNS_SAFEFONTS_VERSION . '-' . filemtime(CHRMRTNS_SAFEFONTS_PLUGIN_DIR . 'assets/css/admin.css')
         );
 
         wp_enqueue_script(
             'safefonts-admin',
-            SAFEFONTS_PLUGIN_URL . 'assets/js/admin.js',
+            CHRMRTNS_SAFEFONTS_PLUGIN_URL . 'assets/js/admin.js',
             array('jquery'),
-            SAFEFONTS_VERSION . '-' . filemtime(SAFEFONTS_PLUGIN_DIR . 'assets/js/admin.js'),
+            CHRMRTNS_SAFEFONTS_VERSION . '-' . filemtime(CHRMRTNS_SAFEFONTS_PLUGIN_DIR . 'assets/js/admin.js'),
             true
         );
 
         wp_localize_script('safefonts-admin', 'safefontsAjax', array(
             'ajaxurl' => admin_url('admin-ajax.php'),
-            'nonce' => wp_create_nonce('safefonts_admin'),
+            'nonce' => wp_create_nonce('chrmrtns_safefonts_admin'),
             'strings' => array(
                 'confirm_delete' => __('Are you sure you want to delete this font?', 'safefonts'),
                 'uploading' => __('Uploading...', 'safefonts'),
@@ -166,9 +166,9 @@ class AdminInterface {
         }
 
         // Handle settings save
-        if (isset($_POST['safefonts_save_settings']) &&
-            isset($_POST['safefonts_nonce']) &&
-            wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['safefonts_nonce'])), 'safefonts_settings')) {
+        if (isset($_POST['chrmrtns_safefonts_save_settings']) &&
+            isset($_POST['chrmrtns_safefonts_nonce']) &&
+            wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['chrmrtns_safefonts_nonce'])), 'chrmrtns_safefonts_settings')) {
 
             $this->save_settings();
         }
@@ -187,14 +187,14 @@ class AdminInterface {
         // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified in init() before calling this method
         $delete_data_on_uninstall = isset($_POST['delete_data_on_uninstall']) ? true : false;
 
-        update_option('safefonts_max_file_size', $max_file_size);
-        update_option('safefonts_allowed_types', $allowed_types);
-        update_option('safefonts_preload_fonts', $preload_fonts);
-        update_option('safefonts_delete_data_on_uninstall', $delete_data_on_uninstall);
+        update_option('chrmrtns_safefonts_max_file_size', $max_file_size);
+        update_option('chrmrtns_safefonts_allowed_types', $allowed_types);
+        update_option('chrmrtns_safefonts_preload_fonts', $preload_fonts);
+        update_option('chrmrtns_safefonts_delete_data_on_uninstall', $delete_data_on_uninstall);
 
         add_settings_error(
-            'safefonts_messages',
-            'safefonts_message',
+            'chrmrtns_safefonts_messages',
+            'chrmrtns_safefonts_message',
             __('Settings saved successfully.', 'safefonts'),
             'updated'
         );
@@ -204,52 +204,52 @@ class AdminInterface {
      * Dashboard page
      */
     public function dashboard_page() {
-        include SAFEFONTS_PLUGIN_DIR . 'views/dashboard-page.php';
+        include CHRMRTNS_SAFEFONTS_PLUGIN_DIR . 'views/dashboard-page.php';
     }
 
     /**
      * Fonts page
      */
     public function fonts_page() {
-        $font_manager = safefonts()->font_manager;
+        $font_manager = chrmrtns_safefonts()->font_manager;
         $fonts = $font_manager->get_fonts_by_family();
 
-        include SAFEFONTS_PLUGIN_DIR . 'views/fonts-page.php';
+        include CHRMRTNS_SAFEFONTS_PLUGIN_DIR . 'views/fonts-page.php';
     }
 
     /**
      * Upload page
      */
     public function upload_page() {
-        include SAFEFONTS_PLUGIN_DIR . 'views/upload-page.php';
+        include CHRMRTNS_SAFEFONTS_PLUGIN_DIR . 'views/upload-page.php';
     }
 
     /**
      * Settings page
      */
     public function settings_page() {
-        include SAFEFONTS_PLUGIN_DIR . 'views/settings-page.php';
+        include CHRMRTNS_SAFEFONTS_PLUGIN_DIR . 'views/settings-page.php';
     }
 
     /**
      * System Info page
      */
     public function system_page() {
-        include SAFEFONTS_PLUGIN_DIR . 'views/system-page.php';
+        include CHRMRTNS_SAFEFONTS_PLUGIN_DIR . 'views/system-page.php';
     }
 
     /**
      * Help & Documentation page
      */
     public function help_page() {
-        include SAFEFONTS_PLUGIN_DIR . 'views/help-page.php';
+        include CHRMRTNS_SAFEFONTS_PLUGIN_DIR . 'views/help-page.php';
     }
 
     /**
      * Render single font upload form
      */
     public function render_upload_form() {
-        $nonce = wp_create_nonce('safefonts_upload');
+        $nonce = wp_create_nonce('chrmrtns_safefonts_upload');
         ?>
         <div class="safefonts-upload-section">
             <h3><?php esc_html_e('Upload Font File', 'safefonts'); ?></h3>
@@ -354,8 +354,8 @@ class AdminInterface {
             return;
         }
 
-        $delete_nonce = wp_create_nonce('safefonts_delete');
-        $bulk_delete_nonce = wp_create_nonce('safefonts_bulk_delete');
+        $delete_nonce = wp_create_nonce('chrmrtns_safefonts_delete');
+        $bulk_delete_nonce = wp_create_nonce('chrmrtns_safefonts_bulk_delete');
         ?>
         <div class="safefonts-fonts-list">
             <div class="safefonts-list-header">
@@ -431,10 +431,10 @@ class AdminInterface {
      * Render settings form
      */
     public function render_settings_form() {
-        $max_file_size = get_option('safefonts_max_file_size', 2 * 1024 * 1024);
-        $allowed_types = get_option('safefonts_allowed_types', array('woff2', 'woff', 'ttf', 'otf'));
+        $max_file_size = get_option('chrmrtns_safefonts_max_file_size', 2 * 1024 * 1024);
+        $allowed_types = get_option('chrmrtns_safefonts_allowed_types', array('woff2', 'woff', 'ttf', 'otf'));
 
-        $nonce = wp_create_nonce('safefonts_settings');
+        $nonce = wp_create_nonce('chrmrtns_safefonts_settings');
         ?>
         <div class="safefonts-settings-section">
             <h3><?php esc_html_e('Settings', 'safefonts'); ?></h3>
@@ -514,32 +514,49 @@ class AdminInterface {
                         </th>
                         <td>
                             <?php
-                            $preload_fonts = get_option('safefonts_preload_fonts', array());
-                            $fonts = safefonts()->font_manager->get_fonts_by_family();
+                            $preload_fonts = get_option('chrmrtns_safefonts_preload_fonts', array());
+                            $fonts_grouped = chrmrtns_safefonts()->font_preloader->get_fonts_grouped();
                             ?>
                             <fieldset>
                                 <legend class="screen-reader-text">
                                     <span><?php esc_html_e('Font Preloading', 'safefonts'); ?></span>
                                 </legend>
 
-                                <?php if (empty($fonts)): ?>
+                                <?php if (empty($fonts_grouped)): ?>
                                     <p class="description">
                                         <?php esc_html_e('No fonts uploaded yet. Upload fonts to enable preloading.', 'safefonts'); ?>
                                     </p>
                                 <?php else: ?>
-                                    <?php foreach ($fonts as $family => $family_fonts): ?>
-                                        <label>
-                                            <input type="checkbox"
-                                                   name="preload_fonts[]"
-                                                   value="<?php echo esc_attr($family); ?>"
-                                                   <?php checked(in_array($family, $preload_fonts)); ?>>
-                                            <?php echo esc_html($family); ?>
-                                        </label><br>
+                                    <style>
+                                        .safefonts-preload-family { margin-bottom: 15px; }
+                                        .safefonts-preload-family-name { font-weight: 600; margin-bottom: 5px; cursor: pointer; }
+                                        .safefonts-preload-family-name:hover { color: #2271b1; }
+                                        .safefonts-preload-weights { margin-left: 25px; }
+                                        .safefonts-preload-weights label { display: block; margin: 3px 0; }
+                                    </style>
+
+                                    <?php foreach ($fonts_grouped as $family => $weights): ?>
+                                        <div class="safefonts-preload-family">
+                                            <div class="safefonts-preload-family-name" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none';">
+                                                ▸ <?php echo esc_html($family); ?> <span style="font-weight: normal; font-size: 0.9em; color: #666;">(<?php echo count($weights); ?> <?php esc_html_e('weights', 'safefonts'); ?>)</span>
+                                            </div>
+                                            <div class="safefonts-preload-weights" style="display: none;">
+                                                <?php foreach ($weights as $weight_data): ?>
+                                                    <label>
+                                                        <input type="checkbox"
+                                                               name="preload_fonts[]"
+                                                               value="<?php echo esc_attr($weight_data['identifier']); ?>"
+                                                               <?php checked(in_array($weight_data['identifier'], $preload_fonts)); ?>>
+                                                        <?php echo esc_html($weight_data['label']); ?>
+                                                    </label>
+                                                <?php endforeach; ?>
+                                            </div>
+                                        </div>
                                     <?php endforeach; ?>
 
                                     <p class="description">
                                         <?php esc_html_e('⚡ Font preloading tells the browser to download fonts earlier, reducing flash of invisible text (FOIT).', 'safefonts'); ?><br>
-                                        <strong><?php esc_html_e('Tip:', 'safefonts'); ?></strong> <?php esc_html_e('Only preload 1-2 critical fonts (like your main body font) for best performance.', 'safefonts'); ?>
+                                        <strong><?php esc_html_e('Tip:', 'safefonts'); ?></strong> <?php esc_html_e('Only preload 1-2 critical font weights (like your main body font weight) for best performance.', 'safefonts'); ?>
                                     </p>
                                 <?php endif; ?>
                             </fieldset>
@@ -560,7 +577,7 @@ class AdminInterface {
                                     <input type="checkbox"
                                            name="delete_data_on_uninstall"
                                            value="1"
-                                           <?php checked(get_option('safefonts_delete_data_on_uninstall', false)); ?>>
+                                           <?php checked(get_option('chrmrtns_safefonts_delete_data_on_uninstall', false)); ?>>
                                     <?php esc_html_e('Delete all plugin data when uninstalling', 'safefonts'); ?>
                                 </label>
 
@@ -576,11 +593,11 @@ class AdminInterface {
                     </tr>
                 </table>
 
-                <input type="hidden" name="safefonts_nonce" value="<?php echo esc_attr($nonce); ?>">
+                <input type="hidden" name="chrmrtns_safefonts_nonce" value="<?php echo esc_attr($nonce); ?>">
 
                 <p class="submit">
                     <input type="submit"
-                           name="safefonts_save_settings"
+                           name="chrmrtns_safefonts_save_settings"
                            class="button button-primary"
                            value="<?php esc_html_e('Save Settings', 'safefonts'); ?>">
                 </p>
@@ -593,13 +610,13 @@ class AdminInterface {
      * Render system info
      */
     public function render_system_info() {
-        $fonts_dir = SAFEFONTS_ASSETS_DIR;
-        $fonts_url = SAFEFONTS_ASSETS_URL;
+        $fonts_dir = CHRMRTNS_SAFEFONTS_ASSETS_DIR;
+        $fonts_url = CHRMRTNS_SAFEFONTS_ASSETS_URL;
 
         global $wpdb;
         $table_name = $wpdb->prefix . 'chrmrtns_safefonts';
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Simple count query, table name is safe
-        $font_count = $wpdb->get_var("SELECT COUNT(*) FROM {$table_name}");
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Simple count query
+        $font_count = $wpdb->get_var($wpdb->prepare('SELECT COUNT(*) FROM %i', $table_name));
 
         ?>
         <div class="safefonts-system-info">
@@ -608,7 +625,7 @@ class AdminInterface {
             <table class="form-table">
                 <tr>
                     <th scope="row"><?php esc_html_e('Plugin Version', 'safefonts'); ?></th>
-                    <td><?php echo esc_html(SAFEFONTS_VERSION); ?></td>
+                    <td><?php echo esc_html(CHRMRTNS_SAFEFONTS_VERSION); ?></td>
                 </tr>
 
                 <tr>

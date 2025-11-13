@@ -36,7 +36,7 @@ class Autoloader {
      * Constructor
      */
     public function __construct() {
-        $this->base_directory = SAFEFONTS_PLUGIN_DIR . 'includes/';
+        $this->base_directory = CHRMRTNS_SAFEFONTS_PLUGIN_DIR . 'includes/';
     }
 
     /**

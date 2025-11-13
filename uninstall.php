@@ -14,38 +14,38 @@ if (!defined('WP_UNINSTALL_PLUGIN')) {
 }
 
 // Check if user wants to delete data
-$delete_data = get_option('safefonts_delete_data_on_uninstall', false);
+$chrmrtns_safefonts_delete_data = get_option('chrmrtns_safefonts_delete_data_on_uninstall', false);
 
-if (!$delete_data) {
+if (!$chrmrtns_safefonts_delete_data) {
     // User wants to keep data - exit without deleting anything
     return;
 }
 
 // Check if SafeFonts Pro is still installed
-$pro_active = is_plugin_active('safefonts-pro/safefonts-pro.php') ||
-              file_exists(WP_PLUGIN_DIR . '/safefonts-pro/safefonts-pro.php');
+$chrmrtns_safefonts_pro_active = is_plugin_active('safefonts-pro/safefonts-pro.php') ||
+                                  file_exists(WP_PLUGIN_DIR . '/safefonts-pro/safefonts-pro.php');
 
 global $wpdb;
 
 // Delete plugin-specific options
-delete_option('safefonts_max_file_size');
-delete_option('safefonts_allowed_types');
-delete_option('safefonts_preload_fonts');
-delete_option('safefonts_version');
-delete_option('safefonts_delete_data_on_uninstall');
+delete_option('chrmrtns_safefonts_max_file_size');
+delete_option('chrmrtns_safefonts_allowed_types');
+delete_option('chrmrtns_safefonts_preload_fonts');
+delete_option('chrmrtns_safefonts_version');
+delete_option('chrmrtns_safefonts_delete_data_on_uninstall');
 
 // Only delete shared resources if Pro is NOT installed
-if (!$pro_active) {
+if (!$chrmrtns_safefonts_pro_active) {
     // Drop the fonts database table (shared with Pro)
-    $table_name = $wpdb->prefix . 'chrmrtns_safefonts';
-    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Safe table drop during uninstall
-    $wpdb->query("DROP TABLE IF EXISTS {$table_name}");
+    $chrmrtns_safefonts_table_name = $wpdb->prefix . 'chrmrtns_safefonts';
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange -- Safe table drop during uninstall
+    $wpdb->query($wpdb->prepare("DROP TABLE IF EXISTS %i", $chrmrtns_safefonts_table_name));
 
     // Delete the uploads directory (shared with Pro)
-    $upload_dir = wp_upload_dir();
-    $uploads_dir = $upload_dir['basedir'] . '/safefonts/';
-    if (is_dir($uploads_dir)) {
-        safefonts_uninstall_delete_directory($uploads_dir);
+    $chrmrtns_safefonts_upload_dir = wp_upload_dir();
+    $chrmrtns_safefonts_uploads_dir = $chrmrtns_safefonts_upload_dir['basedir'] . '/safefonts/';
+    if (is_dir($chrmrtns_safefonts_uploads_dir)) {
+        chrmrtns_safefonts_uninstall_delete_directory($chrmrtns_safefonts_uploads_dir);
     }
 }
 
@@ -55,7 +55,7 @@ if (!$pro_active) {
  * @param string $dir Directory path
  * @return bool Success status
  */
-function safefonts_uninstall_delete_directory($dir) {
+function chrmrtns_safefonts_uninstall_delete_directory($dir) {
     if (!is_dir($dir)) {
         return false;
     }
@@ -66,7 +66,7 @@ function safefonts_uninstall_delete_directory($dir) {
         $path = $dir . DIRECTORY_SEPARATOR . $item;
 
         if (is_dir($path)) {
-            safefonts_uninstall_delete_directory($path);
+            chrmrtns_safefonts_uninstall_delete_directory($path);
         } else {
             // phpcs:ignore WordPress.WP.AlternativeFunctions.unlink_unlink -- Necessary for uninstall
             unlink($path);

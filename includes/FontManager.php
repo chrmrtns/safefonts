@@ -53,16 +53,16 @@ class FontManager {
      * Get all fonts from database
      */
     public function get_fonts() {
-        $cache_key = 'safefonts_fonts_list_v' . SAFEFONTS_VERSION;
+        $cache_key = 'safefonts_fonts_list_v' . CHRMRTNS_SAFEFONTS_VERSION;
         $fonts = get_transient($cache_key);
 
         if (false === $fonts) {
             global $wpdb;
             $table_name = $wpdb->prefix . 'chrmrtns_safefonts';
 
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Table name is safe (prefix + hardcoded), results are cached via transient
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Results are cached via transient
             $fonts = $wpdb->get_results(
-                "SELECT * FROM {$table_name} ORDER BY font_family ASC, font_weight ASC" // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                $wpdb->prepare('SELECT * FROM %i ORDER BY font_family ASC, font_weight ASC', $table_name)
             );
 
             // Cache for 12 hours
@@ -107,7 +107,7 @@ class FontManager {
 
         foreach ($fonts as $font) {
             // Use relative path from database (includes family folder if present)
-            $font_url = SAFEFONTS_ASSETS_URL . $font->file_path;
+            $font_url = CHRMRTNS_SAFEFONTS_ASSETS_URL . $font->file_path;
             $format = $this->get_font_format($font->file_path);
 
             $css .= "@font-face {\n";
@@ -160,7 +160,7 @@ class FontManager {
         $family_slug = $this->get_family_slug($font_info['family']);
 
         // Create family folder if it doesn't exist
-        $family_dir = SAFEFONTS_ASSETS_DIR . $family_slug . '/';
+        $family_dir = CHRMRTNS_SAFEFONTS_ASSETS_DIR . $family_slug . '/';
         if (!file_exists($family_dir)) {
             if (!wp_mkdir_p($family_dir)) {
                 return new \WP_Error('mkdir_failed', __('Failed to create font family directory.', 'safefonts'));
@@ -178,7 +178,7 @@ class FontManager {
 
         // Full path includes family folder
         $relative_path = $family_slug . '/' . $safe_filename;
-        $destination = SAFEFONTS_ASSETS_DIR . $relative_path;
+        $destination = CHRMRTNS_SAFEFONTS_ASSETS_DIR . $relative_path;
 
         // Copy file to assets directory
         // Use @ to suppress PHP warnings and check result properly
@@ -243,7 +243,7 @@ class FontManager {
         }
 
         // Check file size
-        $max_size = get_option('safefonts_max_file_size', 2 * 1024 * 1024);
+        $max_size = get_option('chrmrtns_safefonts_max_file_size', 2 * 1024 * 1024);
         if (filesize($file_path) > $max_size) {
             return new \WP_Error('file_too_large', __('Font file is too large.', 'safefonts'));
         }
@@ -254,12 +254,12 @@ class FontManager {
         $extension = strtolower($file_info['extension'] ?? '');
 
         // Check allowed extensions
-        $allowed_types = get_option('safefonts_allowed_types', array('woff2', 'woff', 'ttf', 'otf'));
+        $allowed_types = get_option('chrmrtns_safefonts_allowed_types', array('woff2', 'woff', 'ttf', 'otf'));
 
         // Ensure allowed_types is an array (could be empty or corrupted)
         if (!is_array($allowed_types) || empty($allowed_types)) {
             $allowed_types = array('woff2', 'woff', 'ttf', 'otf');
-            update_option('safefonts_allowed_types', $allowed_types);
+            update_option('chrmrtns_safefonts_allowed_types', $allowed_types);
         }
 
         if (!in_array($extension, $allowed_types)) {
@@ -400,7 +400,7 @@ class FontManager {
      * Clear fonts cache
      */
     public function clear_fonts_cache() {
-        delete_transient('safefonts_fonts_list_v' . SAFEFONTS_VERSION);
+        delete_transient('safefonts_fonts_list_v' . CHRMRTNS_SAFEFONTS_VERSION);
     }
 
     /**
@@ -418,7 +418,7 @@ class FontManager {
         // Verify nonce and capabilities
         if (!current_user_can('manage_options') ||
             !isset($_POST['nonce']) ||
-            !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'safefonts_upload')) {
+            !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'chrmrtns_safefonts_upload')) {
             wp_die(esc_html__('Security check failed.', 'safefonts'));
         }
 
@@ -465,7 +465,7 @@ class FontManager {
         // Verify nonce and capabilities
         if (!current_user_can('manage_options') ||
             !isset($_POST['nonce']) ||
-            !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'safefonts_delete')) {
+            !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'chrmrtns_safefonts_delete')) {
             wp_die(esc_html__('Security check failed.', 'safefonts'));
         }
 
@@ -479,10 +479,11 @@ class FontManager {
         $table_name = $wpdb->prefix . 'chrmrtns_safefonts';
 
         // Get font info
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Table name is safe (prefix + hardcoded), single row query
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Single row query
         $font = $wpdb->get_row(
             $wpdb->prepare(
-                "SELECT * FROM {$table_name} WHERE id = %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                'SELECT * FROM %i WHERE id = %d',
+                $table_name,
                 $font_id
             )
         );
@@ -492,14 +493,14 @@ class FontManager {
         }
 
         // Delete file
-        $file_path = SAFEFONTS_ASSETS_DIR . $font->file_path;
+        $file_path = CHRMRTNS_SAFEFONTS_ASSETS_DIR . $font->file_path;
         if (file_exists($file_path)) {
             wp_delete_file($file_path);
         }
 
         // Check if family folder is empty and remove it
         $family_dir = dirname($file_path);
-        if ($family_dir !== SAFEFONTS_ASSETS_DIR && is_dir($family_dir)) {
+        if ($family_dir !== CHRMRTNS_SAFEFONTS_ASSETS_DIR && is_dir($family_dir)) {
             // Check if directory is empty (only . and .. remain)
             // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_readdir -- Required for directory cleanup check
             $files = scandir($family_dir);
@@ -538,7 +539,7 @@ class FontManager {
         // Verify nonce and capabilities
         if (!current_user_can('manage_options') ||
             !isset($_POST['nonce']) ||
-            !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'safefonts_bulk_delete')) {
+            !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'chrmrtns_safefonts_bulk_delete')) {
             wp_die(esc_html__('Security check failed.', 'safefonts'));
         }
 
@@ -561,10 +562,11 @@ class FontManager {
 
         foreach ($font_ids as $font_id) {
             // Get font info
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Table name is safe (prefix + hardcoded), single row query
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Single row query
             $font = $wpdb->get_row(
                 $wpdb->prepare(
-                    "SELECT * FROM {$table_name} WHERE id = %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                    'SELECT * FROM %i WHERE id = %d',
+                    $table_name,
                     $font_id
                 )
             );
@@ -574,14 +576,14 @@ class FontManager {
             }
 
             // Delete file
-            $file_path = SAFEFONTS_ASSETS_DIR . $font->file_path;
+            $file_path = CHRMRTNS_SAFEFONTS_ASSETS_DIR . $font->file_path;
             if (file_exists($file_path)) {
                 wp_delete_file($file_path);
             }
 
             // Track family folder for cleanup
             $family_dir = dirname($file_path);
-            if ($family_dir !== SAFEFONTS_ASSETS_DIR && !in_array($family_dir, $empty_folders, true)) {
+            if ($family_dir !== CHRMRTNS_SAFEFONTS_ASSETS_DIR && !in_array($family_dir, $empty_folders, true)) {
                 $empty_folders[] = $family_dir;
             }
 

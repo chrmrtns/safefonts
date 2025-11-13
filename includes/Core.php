@@ -33,6 +33,13 @@ class Core {
     public $font_manager;
 
     /**
+     * Font Preloader instance
+     *
+     * @var FontPreloader
+     */
+    public $font_preloader;
+
+    /**
      * Admin Interface instance
      *
      * @var Admin\AdminInterface
@@ -73,6 +80,7 @@ class Core {
 
         // Initialize components
         $this->font_manager = new FontManager();
+        $this->font_preloader = new FontPreloader($this->font_manager);
 
         if (is_admin()) {
             $this->admin = new Admin\AdminInterface();
@@ -82,7 +90,7 @@ class Core {
         add_action('wp_enqueue_scripts', array($this, 'enqueue_fonts'));
         add_action('enqueue_block_editor_assets', array($this, 'enqueue_fonts'));
         add_action('admin_enqueue_scripts', array($this, 'enqueue_fonts_admin'));
-        add_action('wp_head', array($this, 'add_font_preload_tags'), 1);
+        add_action('wp_head', array($this->font_preloader, 'add_preload_tags'), 1);
 
         // Allow font file uploads
         add_filter('upload_mimes', array($this, 'allow_font_uploads'));
@@ -99,8 +107,8 @@ class Core {
         }
 
         // Register activation/deactivation hooks
-        register_activation_hook(SAFEFONTS_PLUGIN_DIR . 'safefonts.php', array($this, 'activate'));
-        register_deactivation_hook(SAFEFONTS_PLUGIN_DIR . 'safefonts.php', array($this, 'deactivate'));
+        register_activation_hook(CHRMRTNS_SAFEFONTS_PLUGIN_DIR . 'safefonts.php', array($this, 'activate'));
+        register_deactivation_hook(CHRMRTNS_SAFEFONTS_PLUGIN_DIR . 'safefonts.php', array($this, 'deactivate'));
     }
 
     /**
@@ -110,28 +118,43 @@ class Core {
      * @return void
      */
     public function check_version_and_migrate() {
-        $stored_version = get_option('safefonts_version', '0.0.0');
+        $stored_version = get_option('chrmrtns_safefonts_version', '0.0.0');
+
+        // Migrate from old option names (v1.1.5 and earlier used safefonts_ prefix)
+        if ($stored_version === '0.0.0') {
+            $old_version = get_option('safefonts_version');
+            if ($old_version) {
+                // This is an upgrade from old naming convention
+                $stored_version = $old_version;
+
+                // Migrate all option names
+                $this->migrate_option_names();
+            }
+        }
 
         // Only run if version has changed
-        if (version_compare($stored_version, SAFEFONTS_VERSION, '<')) {
+        if (version_compare($stored_version, CHRMRTNS_SAFEFONTS_VERSION, '<')) {
             // Version 1.1.0+ migrations
             if (version_compare($stored_version, '1.1.0', '<')) {
                 // Ensure database has family_slug column
                 global $wpdb;
                 $table_name = $wpdb->prefix . 'chrmrtns_safefonts';
-                $columns = $wpdb->get_col("DESCRIBE {$table_name}"); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                $columns = $wpdb->get_col($wpdb->prepare("DESCRIBE %i", $table_name)); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
                 if (!in_array('family_slug', $columns, true)) {
-                    $wpdb->query("ALTER TABLE {$table_name} ADD COLUMN family_slug varchar(255) NOT NULL DEFAULT '' AFTER font_family"); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-                    $wpdb->query("ALTER TABLE {$table_name} ADD KEY family_slug (family_slug)"); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                    $wpdb->query($wpdb->prepare("ALTER TABLE %i ADD COLUMN family_slug varchar(255) NOT NULL DEFAULT '' AFTER font_family", $table_name)); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange
+                    $wpdb->query($wpdb->prepare("ALTER TABLE %i ADD KEY family_slug (family_slug)", $table_name)); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange
                 }
 
                 // Run folder migration
                 $this->migrate_to_family_folders();
             }
 
+            // Migrate preload format (family-only to family-weight)
+            $this->font_preloader->migrate_old_format();
+
             // Update stored version
-            update_option('safefonts_version', SAFEFONTS_VERSION);
+            update_option('chrmrtns_safefonts_version', CHRMRTNS_SAFEFONTS_VERSION);
         }
     }
 
@@ -141,8 +164,8 @@ class Core {
      * @return void
      */
     public function enqueue_fonts() {
-        $fonts_css_file = SAFEFONTS_PLUGIN_DIR . 'assets/css/fonts.css';
-        $fonts_css_url = SAFEFONTS_PLUGIN_URL . 'assets/css/fonts.css';
+        $fonts_css_file = CHRMRTNS_SAFEFONTS_PLUGIN_DIR . 'assets/css/fonts.css';
+        $fonts_css_url = CHRMRTNS_SAFEFONTS_PLUGIN_URL . 'assets/css/fonts.css';
 
         // Generate fonts.css if it doesn't exist
         if (!file_exists($fonts_css_file)) {
@@ -173,48 +196,6 @@ class Core {
         }
     }
 
-    /**
-     * Add font preload tags to head
-     *
-     * @return void
-     */
-    public function add_font_preload_tags() {
-        $preload_fonts = get_option('safefonts_preload_fonts', array());
-
-        if (empty($preload_fonts)) {
-            return;
-        }
-
-        $fonts = $this->font_manager->get_fonts();
-
-        foreach ($fonts as $font) {
-            // Check if this font family is marked for preloading
-            if (!in_array($font->font_family, $preload_fonts, true)) {
-                continue;
-            }
-
-            // Use relative path from database (includes family folder if present)
-            $font_url = SAFEFONTS_ASSETS_URL . $font->file_path;
-            $extension = strtolower(pathinfo($font->file_path, PATHINFO_EXTENSION));
-
-            // Map file extension to MIME type
-            $mime_types = array(
-                'woff2' => 'font/woff2',
-                'woff' => 'font/woff',
-                'ttf' => 'font/ttf',
-                'otf' => 'font/otf'
-            );
-
-            $mime_type = isset($mime_types[$extension]) ? $mime_types[$extension] : 'font/woff2';
-
-            printf(
-                '<link rel="preload" href="%s" as="font" type="%s" crossorigin>%s',
-                esc_url($font_url),
-                esc_attr($mime_type),
-                "\n"
-            );
-        }
-    }
 
     /**
      * Generate fonts.css file
@@ -223,7 +204,7 @@ class Core {
      */
     public function generate_fonts_css() {
         $fonts_css = $this->font_manager->get_fonts_css();
-        $fonts_css_file = SAFEFONTS_PLUGIN_DIR . 'assets/css/fonts.css';
+        $fonts_css_file = CHRMRTNS_SAFEFONTS_PLUGIN_DIR . 'assets/css/fonts.css';
 
         // Ensure directory exists
         $css_dir = dirname($fonts_css_file);
@@ -263,8 +244,8 @@ class Core {
         add_theme_support('editor-styles');
 
         // Add fonts.css to editor
-        $fonts_css_file = SAFEFONTS_PLUGIN_DIR . 'assets/css/fonts.css';
-        $fonts_css_url = SAFEFONTS_PLUGIN_URL . 'assets/css/fonts.css';
+        $fonts_css_file = CHRMRTNS_SAFEFONTS_PLUGIN_DIR . 'assets/css/fonts.css';
+        $fonts_css_url = CHRMRTNS_SAFEFONTS_PLUGIN_URL . 'assets/css/fonts.css';
 
         if (file_exists($fonts_css_file)) {
             // Use full URL for add_editor_style for consistent cross-environment support
@@ -294,7 +275,7 @@ class Core {
 
             foreach ($variants as $variant) {
                 // Use relative path from database (includes family folder if present)
-                $font_url = SAFEFONTS_ASSETS_URL . $variant->file_path;
+                $font_url = CHRMRTNS_SAFEFONTS_ASSETS_URL . $variant->file_path;
 
                 $font_faces[] = array(
                     'fontFamily' => $family,
@@ -357,7 +338,7 @@ class Core {
 
             foreach ($variants as $variant) {
                 // Use relative path from database (includes family folder if present)
-                $font_url = SAFEFONTS_ASSETS_URL . $variant->file_path;
+                $font_url = CHRMRTNS_SAFEFONTS_ASSETS_URL . $variant->file_path;
 
                 $font_face[] = array(
                     'fontFamily' => $family,
@@ -367,11 +348,17 @@ class Core {
                 );
             }
 
+            // Determine font category for fallback
+            $category = $this->determine_font_category($family);
+
             $font_families[] = array(
-                'fontFamily' => $family,
-                'name' => $family,
-                'slug' => sanitize_title($family),
-                'fontFace' => $font_face
+                'font_family_settings' => array(
+                    'name' => $family,
+                    'fontFamily' => $family . ', ' . $category,
+                    'slug' => sanitize_title($family),
+                    'fontFace' => $font_face
+                ),
+                'categories' => array($category)
             );
         }
 
@@ -387,6 +374,51 @@ class Core {
         );
 
         wp_register_font_collection('safefonts', $config);
+    }
+
+    /**
+     * Determine font category based on family name
+     *
+     * @param string $family Font family name
+     * @return string Font category (serif, sans-serif, monospace, cursive, fantasy)
+     */
+    private function determine_font_category($family) {
+        $family_lower = strtolower($family);
+
+        // Check for serif indicators
+        $serif_keywords = array('serif', 'times', 'garamond', 'georgia', 'palatino', 'baskerville');
+        foreach ($serif_keywords as $keyword) {
+            if (strpos($family_lower, $keyword) !== false) {
+                return 'serif';
+            }
+        }
+
+        // Check for monospace indicators
+        $monospace_keywords = array('mono', 'code', 'courier', 'console', 'terminal');
+        foreach ($monospace_keywords as $keyword) {
+            if (strpos($family_lower, $keyword) !== false) {
+                return 'monospace';
+            }
+        }
+
+        // Check for cursive/handwriting indicators
+        $cursive_keywords = array('script', 'handwriting', 'brush', 'cursive');
+        foreach ($cursive_keywords as $keyword) {
+            if (strpos($family_lower, $keyword) !== false) {
+                return 'cursive';
+            }
+        }
+
+        // Check for display/fantasy indicators
+        $fantasy_keywords = array('display', 'decorative', 'fancy', 'fantasy');
+        foreach ($fantasy_keywords as $keyword) {
+            if (strpos($family_lower, $keyword) !== false) {
+                return 'fantasy';
+            }
+        }
+
+        // Default to sans-serif
+        return 'sans-serif';
     }
 
     /**
@@ -422,10 +454,10 @@ class Core {
         dbDelta($sql);
 
         // Migration check: Add family_slug column if it doesn't exist (v1.1.0+)
-        $columns = $wpdb->get_col("DESCRIBE {$table_name}"); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Migration check, runs once on activation
+        $columns = $wpdb->get_col($wpdb->prepare("DESCRIBE %i", $table_name)); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Migration check, runs once on activation
         if (!in_array('family_slug', $columns, true)) {
-            $wpdb->query("ALTER TABLE {$table_name} ADD COLUMN family_slug varchar(255) NOT NULL DEFAULT '' AFTER font_family"); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Adding missing column for migration
-            $wpdb->query("ALTER TABLE {$table_name} ADD KEY family_slug (family_slug)"); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Adding index for new column
+            $wpdb->query($wpdb->prepare("ALTER TABLE %i ADD COLUMN family_slug varchar(255) NOT NULL DEFAULT '' AFTER font_family", $table_name)); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange -- Adding missing column for migration
+            $wpdb->query($wpdb->prepare("ALTER TABLE %i ADD KEY family_slug (family_slug)", $table_name)); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange -- Adding index for new column
         }
 
         // Always check for fonts needing migration (v1.1.0+)
@@ -433,14 +465,14 @@ class Core {
         $this->migrate_to_family_folders();
 
         // Update version
-        update_option('safefonts_version', SAFEFONTS_VERSION);
+        update_option('chrmrtns_safefonts_version', CHRMRTNS_SAFEFONTS_VERSION);
 
         // Set default options
-        add_option('safefonts_max_file_size', 2 * 1024 * 1024);
-        add_option('safefonts_allowed_types', array('woff2', 'woff', 'ttf', 'otf'));
+        add_option('chrmrtns_safefonts_max_file_size', 2 * 1024 * 1024);
+        add_option('chrmrtns_safefonts_allowed_types', array('woff2', 'woff', 'ttf', 'otf'));
 
         // Create fonts directory in uploads folder
-        $fonts_dir = SAFEFONTS_ASSETS_DIR;
+        $fonts_dir = CHRMRTNS_SAFEFONTS_ASSETS_DIR;
         if (!file_exists($fonts_dir)) {
             wp_mkdir_p($fonts_dir);
 
@@ -449,13 +481,13 @@ class Core {
         }
 
         // Migrate fonts from old plugin folder location to uploads folder (v1.0.9+)
-        $old_fonts_dir = SAFEFONTS_PLUGIN_DIR . 'assets/fonts/';
+        $old_fonts_dir = CHRMRTNS_SAFEFONTS_PLUGIN_DIR . 'assets/fonts/';
         if (file_exists($old_fonts_dir) && is_dir($old_fonts_dir)) {
             $this->migrate_fonts_to_uploads($old_fonts_dir, $fonts_dir);
         }
 
         // Create CSS directory (in assets/css/ not assets/fonts/css/)
-        $css_dir = SAFEFONTS_PLUGIN_DIR . 'assets/css/';
+        $css_dir = CHRMRTNS_SAFEFONTS_PLUGIN_DIR . 'assets/css/';
         if (!file_exists($css_dir)) {
             wp_mkdir_p($css_dir);
         }
@@ -464,7 +496,36 @@ class Core {
         $this->generate_fonts_css();
 
         // Set version
-        update_option('safefonts_version', SAFEFONTS_VERSION);
+        update_option('chrmrtns_safefonts_version', CHRMRTNS_SAFEFONTS_VERSION);
+    }
+
+    /**
+     * Migrate option names from old safefonts_ prefix to chrmrtns_safefonts_ prefix
+     *
+     * @return void
+     */
+    private function migrate_option_names() {
+        // List of options to migrate
+        $options_to_migrate = array(
+            'safefonts_version' => 'chrmrtns_safefonts_version',
+            'safefonts_preload_fonts' => 'chrmrtns_safefonts_preload_fonts',
+            'safefonts_max_file_size' => 'chrmrtns_safefonts_max_file_size',
+            'safefonts_allowed_types' => 'chrmrtns_safefonts_allowed_types',
+            'safefonts_delete_data_on_uninstall' => 'chrmrtns_safefonts_delete_data_on_uninstall',
+            'safefonts_directory_error' => 'chrmrtns_safefonts_directory_error',
+            'safefonts_family_folders_migrated_count' => 'chrmrtns_safefonts_family_folders_migrated_count',
+            'safefonts_migration_notice' => 'chrmrtns_safefonts_migration_notice',
+        );
+
+        foreach ($options_to_migrate as $old_name => $new_name) {
+            $value = get_option($old_name);
+            if ($value !== false) {
+                // Copy to new option name
+                update_option($new_name, $value);
+                // Delete old option
+                delete_option($old_name);
+            }
+        }
     }
 
     /**
@@ -504,7 +565,7 @@ class Core {
 
         // Add admin notice about migration
         if ($migrated_count > 0) {
-            add_option('safefonts_migration_notice', $migrated_count);
+            add_option('chrmrtns_safefonts_migration_notice', $migrated_count);
         }
     }
 
@@ -521,7 +582,7 @@ class Core {
         // Get all fonts that need migration (file_path doesn't contain '/')
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Migration query, one-time operation
         $fonts = $wpdb->get_results(
-            "SELECT * FROM {$table_name} WHERE file_path NOT LIKE '%/%'" // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+            $wpdb->prepare("SELECT * FROM %i WHERE file_path NOT LIKE %s", $table_name, '%/%')
         );
 
         if (empty($fonts)) {
@@ -540,17 +601,17 @@ class Core {
             }
 
             // Create family folder
-            $family_dir = SAFEFONTS_ASSETS_DIR . $family_slug . '/';
+            $family_dir = CHRMRTNS_SAFEFONTS_ASSETS_DIR . $family_slug . '/';
             if (!file_exists($family_dir)) {
                 wp_mkdir_p($family_dir);
             }
 
             // Old file path (flat structure)
-            $old_file = SAFEFONTS_ASSETS_DIR . $font->file_path;
+            $old_file = CHRMRTNS_SAFEFONTS_ASSETS_DIR . $font->file_path;
 
             // New file path (family folder structure)
             $new_relative_path = $family_slug . '/' . $font->file_path;
-            $new_file = SAFEFONTS_ASSETS_DIR . $new_relative_path;
+            $new_file = CHRMRTNS_SAFEFONTS_ASSETS_DIR . $new_relative_path;
 
             // Move file if it exists
             if (file_exists($old_file) && !file_exists($new_file)) {
@@ -586,7 +647,7 @@ class Core {
         // (in case database was updated but CSS wasn't regenerated)
         if (!empty($fonts)) {
             // Clear fonts cache
-            delete_transient('safefonts_fonts_list_v' . SAFEFONTS_VERSION);
+            delete_transient('safefonts_fonts_list_v' . CHRMRTNS_SAFEFONTS_VERSION);
 
             // Regenerate fonts.css
             $this->generate_fonts_css();
@@ -594,7 +655,7 @@ class Core {
 
         if ($migrated_count > 0) {
             // Add admin notice
-            add_option('safefonts_family_folders_migrated_count', $migrated_count);
+            add_option('chrmrtns_safefonts_family_folders_migrated_count', $migrated_count);
         }
     }
 
@@ -604,14 +665,14 @@ class Core {
      * @return bool True if directory exists and is writable, false otherwise
      */
     public function ensure_uploads_directory() {
-        $fonts_dir = SAFEFONTS_ASSETS_DIR;
+        $fonts_dir = CHRMRTNS_SAFEFONTS_ASSETS_DIR;
 
         // Check if directory exists
         if (!file_exists($fonts_dir)) {
             // Try to create directory
             if (!wp_mkdir_p($fonts_dir)) {
                 // Could not create directory
-                update_option('safefonts_directory_error', 'create_failed');
+                update_option('chrmrtns_safefonts_directory_error', 'create_failed');
                 return false;
             }
 
@@ -640,12 +701,12 @@ class Core {
         // Check if directory is writable
         // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_is_writable -- Read-only check for validation
         if (!is_writable($fonts_dir)) {
-            update_option('safefonts_directory_error', 'not_writable');
+            update_option('chrmrtns_safefonts_directory_error', 'not_writable');
             return false;
         }
 
         // Directory exists and is writable - clear any errors
-        delete_option('safefonts_directory_error');
+        delete_option('chrmrtns_safefonts_directory_error');
         return true;
     }
 
@@ -655,13 +716,13 @@ class Core {
      * @return void
      */
     public function show_directory_notices() {
-        $error = get_option('safefonts_directory_error');
+        $error = get_option('chrmrtns_safefonts_directory_error');
 
         if (!$error) {
             return;
         }
 
-        $fonts_dir = SAFEFONTS_ASSETS_DIR;
+        $fonts_dir = CHRMRTNS_SAFEFONTS_ASSETS_DIR;
 
         if ('create_failed' === $error) {
             ?>
@@ -701,6 +762,6 @@ class Core {
      */
     public function deactivate() {
         // Clear any transients
-        delete_transient('safefonts_fonts_list_v' . SAFEFONTS_VERSION);
+        delete_transient('safefonts_fonts_list_v' . CHRMRTNS_SAFEFONTS_VERSION);
     }
 }

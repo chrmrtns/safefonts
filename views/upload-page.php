@@ -4,18 +4,28 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-settings_errors('safefonts_messages');
+settings_errors('chrmrtns_safefonts_messages');
 ?>
 
 <div class="wrap safefonts-admin-wrap">
     <h1 class="safefonts-admin-title">
-        <img src="<?php echo esc_url(SAFEFONTS_PLUGIN_URL . 'assets/images/logo.png'); ?>"
+        <img src="<?php echo esc_url(CHRMRTNS_SAFEFONTS_PLUGIN_URL . 'assets/images/logo.png'); ?>"
              alt="SafeFonts"
              class="safefonts-logo">
         <?php echo esc_html(get_admin_page_title()); ?>
     </h1>
 
-    <?php safefonts()->admin->render_upload_form(); ?>
+    <!-- WebFontDownloader Info Box -->
+    <div class="notice notice-info" style="display: flex; align-items: center; padding: 12px;">
+        <p style="margin: 0; flex-grow: 1;">
+            ℹ️ <?php esc_html_e('Need Google Fonts? Download them for free at WebFontDownloader', 'safefonts'); ?>
+        </p>
+        <a href="https://webfontdownloader.safefonts.com" target="_blank" rel="noopener noreferrer" class="button button-secondary">
+            <?php esc_html_e('Download Fonts', 'safefonts'); ?> →
+        </a>
+    </div>
+
+    <?php chrmrtns_safefonts()->admin->render_upload_form(); ?>
 
     <!-- How to Use Section -->
     <div class="safefonts-upload-section">
