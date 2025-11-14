@@ -84,6 +84,16 @@ class AdminInterface {
             array($this, 'settings_page')
         );
 
+        // CSS Reference submenu
+        add_submenu_page(
+            'safefonts',
+            __('CSS Reference', 'safefonts'),
+            __('CSS Reference', 'safefonts'),
+            'manage_options',
+            'safefonts-css-reference',
+            array($this, 'css_reference_page')
+        );
+
         // System Info submenu
         add_submenu_page(
             'safefonts',
@@ -153,6 +163,9 @@ class AdminInterface {
                 'upload_error' => __('Upload failed', 'safefonts'),
                 'delete_error' => __('Failed to delete font', 'safefonts'),
                 'font_family_required' => __('Font family name is required', 'safefonts'),
+                'regenerating' => __('Regenerating CSS...', 'safefonts'),
+                'regenerate_success' => __('CSS regenerated successfully!', 'safefonts'),
+                'regenerate_error' => __('Failed to regenerate CSS', 'safefonts'),
             )
         ));
     }
@@ -243,6 +256,14 @@ class AdminInterface {
      */
     public function help_page() {
         include CHRMRTNS_SAFEFONTS_PLUGIN_DIR . 'views/help-page.php';
+    }
+
+    /**
+     * CSS Reference page
+     */
+    public function css_reference_page() {
+        $page = new \Chrmrtns\SafeFonts\Admin\CssReferencePage(chrmrtns_safefonts()->font_manager);
+        $page->render();
     }
 
     /**
@@ -531,13 +552,13 @@ class AdminInterface {
                                         .safefonts-preload-family { margin-bottom: 15px; }
                                         .safefonts-preload-family-name { font-weight: 600; margin-bottom: 5px; cursor: pointer; }
                                         .safefonts-preload-family-name:hover { color: #2271b1; }
-                                        .safefonts-preload-weights { margin-left: 25px; }
+                                        .safefonts-preload-weights { margin-left: 25px; display: flex; flex-direction: column; }
                                         .safefonts-preload-weights label { display: block; margin: 3px 0; }
                                     </style>
 
                                     <?php foreach ($fonts_grouped as $family => $weights): ?>
                                         <div class="safefonts-preload-family">
-                                            <div class="safefonts-preload-family-name" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none';">
+                                            <div class="safefonts-preload-family-name" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'flex' : 'none';">
                                                 ▸ <?php echo esc_html($family); ?> <span style="font-weight: normal; font-size: 0.9em; color: #666;">(<?php echo count($weights); ?> <?php esc_html_e('weights', 'safefonts'); ?>)</span>
                                             </div>
                                             <div class="safefonts-preload-weights" style="display: none;">
@@ -589,6 +610,24 @@ class AdminInterface {
                                     <strong><?php esc_html_e('This cannot be undone!', 'safefonts'); ?></strong> <?php esc_html_e('Leave unchecked if you plan to reinstall later.', 'safefonts'); ?>
                                 </p>
                             </fieldset>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th scope="row">
+                            <?php esc_html_e('Font CSS', 'safefonts'); ?>
+                        </th>
+                        <td>
+                            <button type="button"
+                                    id="safefonts-regenerate-css"
+                                    class="button"
+                                    data-nonce="<?php echo esc_attr(wp_create_nonce('regenerate_safefonts_css')); ?>">
+                                <?php esc_html_e('Regenerate CSS', 'safefonts'); ?>
+                            </button>
+                            <p class="description">
+                                <?php esc_html_e('Manually regenerate the fonts.css file. This is useful if fonts aren\'t displaying correctly after an update.', 'safefonts'); ?>
+                            </p>
+                            <div id="safefonts-regenerate-css-result" style="margin-top: 10px;"></div>
                         </td>
                     </tr>
                 </table>

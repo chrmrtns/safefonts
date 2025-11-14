@@ -102,6 +102,22 @@ class FontManager {
         $css = "/* SafeFonts - Generated CSS */\n";
         $css .= "/* Generated: " . current_time('mysql') . " */\n\n";
         $css .= "/* ================================= */\n";
+        $css .= "/*   CSS VARIABLES                  */\n";
+        $css .= "/* ================================= */\n\n";
+
+        $fonts_by_family = $this->get_fonts_by_family();
+
+        if (!empty($fonts_by_family)) {
+            $css .= ":root {\n";
+            foreach ($fonts_by_family as $family => $variants) {
+                $slug = sanitize_title($family);
+                $fallback = $this->get_font_fallback($family);
+                $css .= "  --safefonts-" . $slug . ": '" . esc_attr($family) . "'" . $fallback . ";\n";
+            }
+            $css .= "}\n\n";
+        }
+
+        $css .= "/* ================================= */\n";
         $css .= "/*   FONT FACE DECLARATIONS         */\n";
         $css .= "/* ================================= */\n\n";
 
@@ -364,7 +380,7 @@ class FontManager {
      * @param string $family_name Font family name
      * @return string Fallback font stack
      */
-    private function get_font_fallback($family_name) {
+    public function get_font_fallback($family_name) {
         $family_lower = strtolower($family_name);
 
         // Monospace fonts

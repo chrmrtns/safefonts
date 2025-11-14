@@ -11,6 +11,7 @@
             this.initFontDeletion();
             this.initBulkActions();
             this.initTabs();
+            this.initCssRegeneration();
         },
 
         initUploadForm: function() {
@@ -172,6 +173,54 @@
                 // Show target content
                 $('.safefonts-tab-content').hide();
                 $(target).show();
+            });
+        },
+
+        initCssRegeneration: function() {
+            $('#safefonts-regenerate-css').on('click', function(e) {
+                e.preventDefault();
+                SafeFontsAdmin.handleCssRegeneration($(this));
+            });
+        },
+
+        handleCssRegeneration: function($button) {
+            const nonce = $button.data('nonce');
+            const $result = $('#safefonts-regenerate-css-result');
+
+            // Disable button and show loading state
+            $button.prop('disabled', true);
+            $button.text(safefontsAjax.strings.regenerating);
+            $result.empty();
+
+            $.ajax({
+                url: safefontsAjax.ajaxurl,
+                type: 'POST',
+                data: {
+                    action: 'regenerate_safefonts_css',
+                    nonce: nonce
+                },
+                success: function(response) {
+                    $button.prop('disabled', false);
+                    $button.text('Regenerate CSS');
+
+                    if (response.success) {
+                        $result.html('<div class="notice notice-success inline"><p>' + response.data + '</p></div>');
+
+                        // Clear success message after 5 seconds
+                        setTimeout(function() {
+                            $result.fadeOut(300, function() {
+                                $(this).empty().show();
+                            });
+                        }, 5000);
+                    } else {
+                        $result.html('<div class="notice notice-error inline"><p>' + safefontsAjax.strings.regenerate_error + ': ' + response.data + '</p></div>');
+                    }
+                },
+                error: function() {
+                    $button.prop('disabled', false);
+                    $button.text('Regenerate CSS');
+                    $result.html('<div class="notice notice-error inline"><p>' + safefontsAjax.strings.regenerate_error + '</p></div>');
+                }
             });
         },
 

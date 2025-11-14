@@ -3,18 +3,28 @@ Contributors: chrmrtns
 Tags: fonts, google fonts, custom fonts, typography, gutenberg
 Requires at least: 6.2
 Tested up to: 6.8
-Stable tag: 1.1.7
+Stable tag: 1.1.9
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Host custom fonts locally in WordPress with advanced security validation and block editor integration.
+Host custom fonts locally in WordPress with advanced security validation, block editor integration, and CSS variables support.
 
 == Description ==
 
-**SafeFonts helps you comply with GDPR by hosting fonts locally and avoiding third-party requests, with seamless Gutenberg integration.**
+**SafeFonts helps you comply with GDPR by hosting fonts locally and avoiding third-party requests, with seamless Gutenberg integration and CSS variables support.**
 
-If you need to host custom fonts locally on your WordPress site for performance, privacy, or GDPR compliance, SafeFonts makes it simple with advanced security validation and automatic integration with the WordPress block editor.
+If you need to host custom fonts locally on your WordPress site for performance, privacy, or GDPR compliance, SafeFonts makes it simple with advanced security validation, automatic integration with the WordPress block editor, and CSS variables for custom CSS usage.
+
+= Compatible With =
+
+**Block Editors:**
+* WordPress Gutenberg Block Editor
+* WordPress 6.5+ Font Library
+* Full Site Editing (FSE) Themes
+
+**Need Page Builder Integration?**
+[SafeFonts Pro](https://safefonts.com) adds seamless support for 14 integrations: Elementor, Bricks, Beaver Builder, Divi, Oxygen, Brizy, Builderius, Astra, GeneratePress, Kadence, Blocksy, Kadence Blocks, Spectra, and GenerateBlocks with zero configuration.
 
 = Why Choose SafeFonts? =
 
@@ -36,6 +46,12 @@ If you need to host custom fonts locally on your WordPress site for performance,
 * WordPress 6.5+ Font Library support
 * Works with all blocks that support typography
 * No configuration needed
+
+**🎨 CSS Variables Support**
+* Automatic CSS variables generation for all fonts
+* Use var(--safefonts-font-slug) in custom CSS
+* Works with any theme or builder supporting CSS custom properties
+* Dedicated CSS Reference page with comprehensive documentation
 
 **🎥 Quick Start Video**
 
@@ -75,7 +91,10 @@ Watch this quick tutorial to see how easy it is to upload and use custom fonts i
 
 1. **Upload Fonts**: Go to SafeFonts menu and upload your font files
 2. **Configure Details**: Set font family name, weight (100-900), and style (normal/italic)
-3. **Use in Gutenberg**: Your fonts automatically appear in the block editor
+3. **Use Everywhere**: Your fonts automatically appear in:
+   - Gutenberg block editor typography settings
+   - CSS variables for custom CSS (check CSS Reference page)
+   - WordPress 6.5+ Font Library
 4. **That's It!** Fonts are served locally with optimal performance
 
 = Getting Google Fonts =
@@ -124,6 +143,7 @@ If you're using WordPress 6.5 or higher, SafeFonts automatically integrates with
 2. **Fill in Font Details**: Enter font family name, select weight and style
 3. **Upload File**: Choose your font file (.woff2 recommended)
 4. **Use in Gutenberg**: Your font now appears in block typography settings
+5. **Check CSS Reference**: Visit SafeFonts > CSS Reference to see your CSS variables and implementation details
 
 == Frequently Asked Questions ==
 
@@ -145,7 +165,9 @@ Absolutely! Uploaded fonts automatically appear in:
 
 = Can I use this with page builders? =
 
-The free version works with Gutenberg. For page builder and theme integration (Elementor, Bricks, Beaver Builder, Divi, Oxygen, Brizy, GeneratePress, GenerateBlocks), check out [SafeFonts Pro](https://safefonts.com).
+The free version works with Gutenberg and provides CSS variables that can be manually used with any builder or theme supporting CSS custom properties (like Builderius, Bricks, Oxygen, and others). Simply use var(--safefonts-font-slug) in typography fields or custom CSS.
+
+For automatic integration (14 integrations including Elementor, Bricks, Beaver Builder, Divi, Oxygen, Brizy, Builderius, Astra, GeneratePress, Kadence, Blocksy, Kadence Blocks, Spectra, and GenerateBlocks) where fonts appear directly in builder dropdowns, check out [SafeFonts Pro](https://safefonts.com).
 
 = How does the security validation work? =
 
@@ -169,14 +191,16 @@ Yes! Download the font files from Google Fonts, then upload them individually th
 SafeFonts Free includes:
 * Individual font file uploads
 * Gutenberg integration
+* CSS variables for custom CSS usage
+* CSS Reference page with documentation
 * Security validation
 * WordPress 6.5+ Font Library support
 
 SafeFonts Pro adds:
-* Page builder & theme integration (8 integrations: Elementor, Bricks, Beaver Builder, Divi, Oxygen, Brizy, GeneratePress, GenerateBlocks)
+* Page builder & theme integration (14 integrations: Elementor, Bricks, Beaver Builder, Divi, Oxygen, Brizy, Builderius, Astra, GeneratePress, Kadence, Blocksy, Kadence Blocks, Spectra, GenerateBlocks)
 * Bulk ZIP package imports from Google Fonts Downloader
 * Enhanced admin interface with bulk operations
-* Advanced font management tools (family deletion, Brizy sync, etc.)
+* Advanced font management tools (family deletion, CSS variables, etc.)
 
 [Learn more](https://safefonts.com)
 
@@ -198,6 +222,17 @@ Yes! Each font has a delete button in the SafeFonts admin interface. Deleting a 
 6. Fonts automatically available in Gutenberg typography settings
 
 == Changelog ==
+
+= 1.1.9 =
+* NEW: CSS variables output for all fonts - enables manual font selection in custom CSS and builders supporting CSS custom properties
+* NEW: CSS Reference page - comprehensive documentation for CSS variables, Gutenberg classes, and implementation details
+* FIX: Auto-regeneration now works correctly for both single plugin updates and bulk updates
+* FIX: CSS regeneration hook now properly detects updates from all update methods
+
+= 1.1.8 =
+* NEW: Manual CSS regeneration button in Settings page for refreshing fonts.css when needed
+* NEW: Automatic CSS regeneration after plugin updates to prevent font display issues
+* IMPROVEMENT: fonts.css automatically regenerates when plugin is updated via WordPress auto-update or manual update
 
 = 1.1.7 =
 * FIX: WordPress Font Collection registration now uses correct data structure with font_family_settings wrapper, resolving Site Editor JavaScript errors

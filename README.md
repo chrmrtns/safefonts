@@ -1,10 +1,11 @@
 # SafeFonts
 
-**Secure, GDPR-compliant font management for WordPress with seamless Gutenberg integration.**
+**Secure, GDPR-compliant font management for WordPress with seamless Gutenberg integration and CSS variables support.**
 
-[![WordPress Plugin Version](https://img.shields.io/badge/WordPress-5.0%2B-blue.svg)](https://wordpress.org/plugins/safefonts/)
+[![WordPress Plugin Version](https://img.shields.io/badge/WordPress-6.2%2B-blue.svg)](https://wordpress.org/plugins/safefonts/)
 [![PHP Version](https://img.shields.io/badge/PHP-7.4%2B-purple.svg)](https://php.net)
 [![License](https://img.shields.io/badge/License-GPL%20v2%2B-green.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
+[![Version](https://img.shields.io/badge/Version-1.1.9-orange.svg)](https://github.com/chrmrtns/safefonts/releases)
 
 SafeFonts allows you to self-host custom fonts on your WordPress site for GDPR compliance and better performance. Your fonts automatically integrate with the Gutenberg block editor and WordPress 6.5+ Font Library.
 
@@ -13,6 +14,8 @@ SafeFonts allows you to self-host custom fonts on your WordPress site for GDPR c
 - **🔒 GDPR Compliant** - 100% local font hosting, no external requests
 - **✨ Gutenberg Integration** - Fonts automatically appear in block editor typography settings
 - **🎨 WordPress 6.5+ Font Library** - Full integration with the Site Editor
+- **🎯 CSS Variables Support** - Use `var(--safefonts-font-slug)` in custom CSS for manual integration
+- **📖 CSS Reference Page** - Comprehensive documentation for CSS variables and implementation
 - **🛡️ Secure Upload Validation** - Magic byte verification, MIME type checking, file hashing
 - **⚡ Font Preloading** - Reduce FOIT (Flash of Invisible Text) for better performance
 - **🌍 Translation Ready** - Full i18n support with POT file included
@@ -20,7 +23,7 @@ SafeFonts allows you to self-host custom fonts on your WordPress site for GDPR c
 
 ## 📋 Requirements
 
-- WordPress 5.0 or higher
+- WordPress 6.2 or higher
 - PHP 7.4 or higher
 - Write permissions for `wp-content/uploads/safefonts/` directory
 
@@ -39,6 +42,7 @@ SafeFonts allows you to self-host custom fonts on your WordPress site for GDPR c
    - Gutenberg block editor typography controls
    - WordPress 6.5+ Site Editor Font Library
    - Global Styles typography settings
+   - CSS variables for custom CSS usage (check CSS Reference page)
 
 ## 📦 Installation
 
@@ -137,7 +141,8 @@ SafeFonts uses modern PHP namespaces and PSR-4 autoloading:
 
 Want more features? **[SafeFonts Pro](https://safefonts.com)** includes:
 
-- ✅ **Page Builder Integration** - Elementor, Bricks, Beaver Builder, Divi, Oxygen
+- ✅ **14 Page Builder & Theme Integrations** - Elementor, Bricks, Beaver Builder, Divi, Oxygen, Brizy, Builderius, Astra, GeneratePress, Kadence, Blocksy, Kadence Blocks, Spectra, GenerateBlocks
+- ✅ **Automatic Font Dropdown Integration** - Fonts appear directly in builder typography controls
 - ✅ **Bulk ZIP Import** - Upload entire font families at once
 - ✅ **Automatic Font Detection** - Family, weight, and style auto-detected from filenames
 - ✅ **Priority Support** - Direct help from our team
@@ -160,7 +165,9 @@ There's no limit, but keep in mind that too many fonts can affect site performan
 
 ### Can I use these fonts in page builders?
 
-SafeFonts Free works with Gutenberg. For page builder support (Elementor, Bricks, Beaver Builder, Divi, Oxygen), upgrade to [SafeFonts Pro](https://safefonts.com).
+SafeFonts Free works with Gutenberg and provides CSS variables that can be manually used with any builder or theme supporting CSS custom properties (like Builderius, Bricks, Oxygen, and others). Simply use `var(--safefonts-font-slug)` in typography fields or custom CSS.
+
+For automatic integration where fonts appear directly in builder dropdowns (14 integrations including Elementor, Bricks, Beaver Builder, Divi, Oxygen, Brizy, and more), upgrade to [SafeFonts Pro](https://safefonts.com).
 
 ### Where are fonts stored?
 
@@ -173,6 +180,12 @@ Fonts are stored in `wp-content/uploads/safefonts/` directory and registered in 
 - **Website:** [safefonts.com](https://safefonts.com)
 
 ## 📝 Changelog
+
+### 1.1.9
+- NEW: CSS variables output for all fonts - enables manual font selection in custom CSS and builders supporting CSS custom properties
+- NEW: CSS Reference page - comprehensive documentation for CSS variables, Gutenberg classes, and implementation details
+- Fix: Auto-regeneration now works correctly for both single plugin updates and bulk updates
+- Fix: CSS regeneration hook now properly detects updates from all update methods
 
 ### 1.1.2
 - Fix: Fonts now display correctly in Gutenberg block editor

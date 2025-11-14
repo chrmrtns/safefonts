@@ -106,6 +106,12 @@ class Core {
             add_action('init', array($this, 'register_font_collection'));
         }
 
+        // AJAX handler for CSS regeneration
+        add_action('wp_ajax_regenerate_safefonts_css', array($this, 'handle_regenerate_css_ajax'));
+
+        // Auto-regenerate CSS after plugin updates
+        add_action('upgrader_process_complete', array($this, 'regenerate_css_after_update'), 10, 2);
+
         // Register activation/deactivation hooks
         register_activation_hook(CHRMRTNS_SAFEFONTS_PLUGIN_DIR . 'safefonts.php', array($this, 'activate'));
         register_deactivation_hook(CHRMRTNS_SAFEFONTS_PLUGIN_DIR . 'safefonts.php', array($this, 'deactivate'));
@@ -419,6 +425,60 @@ class Core {
 
         // Default to sans-serif
         return 'sans-serif';
+    }
+
+    /**
+     * AJAX handler for CSS regeneration
+     *
+     * @return void
+     */
+    public function handle_regenerate_css_ajax() {
+        // Verify nonce
+        check_ajax_referer('regenerate_safefonts_css', 'nonce');
+
+        // Check user permissions
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error(__('Insufficient permissions', 'safefonts'));
+        }
+
+        // Regenerate CSS
+        $result = $this->generate_fonts_css();
+
+        if ($result) {
+            wp_send_json_success(__('Font CSS successfully regenerated!', 'safefonts'));
+        } else {
+            wp_send_json_error(__('Failed to regenerate CSS file. Please check file permissions.', 'safefonts'));
+        }
+    }
+
+    /**
+     * Regenerate CSS after plugin update
+     *
+     * @param \WP_Upgrader $upgrader Upgrader instance
+     * @param array        $options  Update options
+     * @return void
+     */
+    public function regenerate_css_after_update($upgrader, $options) {
+        // Check if this is a plugin update
+        if ($options['type'] !== 'plugin' || $options['action'] !== 'update') {
+            return;
+        }
+
+        $plugin_basename = plugin_basename(CHRMRTNS_SAFEFONTS_PLUGIN_FILE);
+
+        // Check if SafeFonts was updated (handle both single and bulk updates)
+        if (isset($options['plugin']) && $options['plugin'] === $plugin_basename) {
+            // Single plugin update
+            $this->generate_fonts_css();
+        } elseif (isset($options['plugins']) && is_array($options['plugins'])) {
+            // Bulk plugin update
+            foreach ($options['plugins'] as $plugin) {
+                if ($plugin === $plugin_basename) {
+                    $this->generate_fonts_css();
+                    break;
+                }
+            }
+        }
     }
 
     /**

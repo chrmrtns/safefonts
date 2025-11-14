@@ -3,7 +3,7 @@
  * Plugin Name: SafeFonts
  * Plugin URI: https://safefonts.com
  * Description: Secure font management for WordPress with Gutenberg integration and local hosting for GDPR compliance.
- * Version: 1.1.7
+ * Version: 1.1.9
  * Requires at least: 6.2
  * Requires PHP: 7.4
  * Author: Chris Martens
@@ -20,7 +20,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('CHRMRTNS_SAFEFONTS_VERSION', '1.1.7');
+define('CHRMRTNS_SAFEFONTS_VERSION', '1.1.9');
 define('CHRMRTNS_SAFEFONTS_PLUGIN_FILE', __FILE__);
 define('CHRMRTNS_SAFEFONTS_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('CHRMRTNS_SAFEFONTS_PLUGIN_URL', plugin_dir_url(__FILE__));
