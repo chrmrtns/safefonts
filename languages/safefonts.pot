@@ -2,14 +2,14 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: SafeFonts 1.1.7\n"
+"Project-Id-Version: SafeFonts 1.1.9\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/safefonts\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-11-12T15:34:06+00:00\n"
+"POT-Creation-Date: 2025-11-14T07:25:20+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: safefonts\n"
@@ -18,7 +18,7 @@ msgstr ""
 #: safefonts.php
 #: includes/Admin/AdminInterface.php:38
 #: includes/Admin/AdminInterface.php:39
-#: includes/Core.php:371
+#: includes/Core.php:377
 msgid "SafeFonts"
 msgstr ""
 
@@ -61,7 +61,7 @@ msgstr ""
 
 #: includes/Admin/AdminInterface.php:80
 #: includes/Admin/AdminInterface.php:81
-#: includes/Admin/AdminInterface.php:440
+#: includes/Admin/AdminInterface.php:461
 #: views/admin-page.php:26
 #: views/dashboard-page.php:69
 msgid "Settings"
@@ -69,397 +69,622 @@ msgstr ""
 
 #: includes/Admin/AdminInterface.php:90
 #: includes/Admin/AdminInterface.php:91
-#: views/admin-page.php:29
-msgid "System Info"
+#: includes/Admin/CssReferencePage.php:46
+msgid "CSS Reference"
 msgstr ""
 
 #: includes/Admin/AdminInterface.php:100
 #: includes/Admin/AdminInterface.php:101
+#: views/admin-page.php:29
+msgid "System Info"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:110
+#: includes/Admin/AdminInterface.php:111
 msgid "Help & Documentation"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:149
+#: includes/Admin/AdminInterface.php:159
 msgid "Are you sure you want to delete this font?"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:150
-#: includes/Admin/AdminInterface.php:340
+#: includes/Admin/AdminInterface.php:160
+#: includes/Admin/AdminInterface.php:361
 msgid "Uploading..."
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:151
+#: includes/Admin/AdminInterface.php:161
 msgid "Processing..."
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:152
+#: includes/Admin/AdminInterface.php:162
 msgid "Upload completed successfully!"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:153
+#: includes/Admin/AdminInterface.php:163
 msgid "Upload failed"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:154
+#: includes/Admin/AdminInterface.php:164
 msgid "Failed to delete font"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:155
+#: includes/Admin/AdminInterface.php:165
 msgid "Font family name is required"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:198
+#: includes/Admin/AdminInterface.php:166
+msgid "Regenerating CSS..."
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:167
+msgid "CSS regenerated successfully!"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:168
+msgid "Failed to regenerate CSS"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:211
 msgid "Settings saved successfully."
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:255
+#: includes/Admin/AdminInterface.php:276
 msgid "Upload Font File"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:257
+#: includes/Admin/AdminInterface.php:278
 msgid "Upload individual font files (.woff2, .woff, .ttf, .otf) for use in Gutenberg."
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:264
+#: includes/Admin/AdminInterface.php:285
 msgid "Font Family Name"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:273
+#: includes/Admin/AdminInterface.php:294
 msgid "Enter the font family name (e.g., \"Open Sans\", \"Roboto\")."
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:279
+#: includes/Admin/AdminInterface.php:300
 msgid "Font Weight"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:297
+#: includes/Admin/AdminInterface.php:318
 msgid "Font Style"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:308
+#: includes/Admin/AdminInterface.php:329
 msgid "Font File"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:317
+#: includes/Admin/AdminInterface.php:338
 msgid "Select a font file (.woff2, .woff, .ttf, .otf)."
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:330
+#: includes/Admin/AdminInterface.php:351
 msgid "Upload Font"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:332
+#: includes/Admin/AdminInterface.php:353
 msgid "Upload font file"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:353
+#: includes/Admin/AdminInterface.php:374
 msgid "No fonts found. Upload font files to get started."
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:362
-#: includes/Admin/AdminInterface.php:662
+#: includes/Admin/AdminInterface.php:383
+#: includes/Admin/AdminInterface.php:701
 msgid "Installed Fonts"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:366
+#: includes/Admin/AdminInterface.php:387
 msgid "Select All"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:373
+#: includes/Admin/AdminInterface.php:394
 msgid "Delete Selected"
 msgstr ""
 
 #. translators: %s: font family name
-#: includes/Admin/AdminInterface.php:411
+#: includes/Admin/AdminInterface.php:432
 #, php-format
 msgid "Delete %s font"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:418
+#: includes/Admin/AdminInterface.php:439
 msgid "Delete"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:446
+#: includes/Admin/AdminInterface.php:467
 msgid "Maximum File Size (MB)"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:457
+#: includes/Admin/AdminInterface.php:478
 msgid "Maximum size for individual font files."
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:464
-#: includes/Admin/AdminInterface.php:469
+#: includes/Admin/AdminInterface.php:485
+#: includes/Admin/AdminInterface.php:490
 #: views/help-page.php:129
 msgid "Allowed Font Types"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:477
+#: includes/Admin/AdminInterface.php:498
 msgid "Recommended"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:505
+#: includes/Admin/AdminInterface.php:526
 msgid "WOFF2 is recommended for best performance and compression."
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:513
-#: includes/Admin/AdminInterface.php:522
+#: includes/Admin/AdminInterface.php:534
+#: includes/Admin/AdminInterface.php:543
 #: views/help-page.php:132
 msgid "Font Preloading"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:527
+#: includes/Admin/AdminInterface.php:548
 msgid "No fonts uploaded yet. Upload fonts to enable preloading."
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:541
+#: includes/Admin/AdminInterface.php:562
 msgid "weights"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:558
+#: includes/Admin/AdminInterface.php:579
 msgid "⚡ Font preloading tells the browser to download fonts earlier, reducing flash of invisible text (FOIT)."
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:559
+#: includes/Admin/AdminInterface.php:580
 msgid "Tip:"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:559
+#: includes/Admin/AdminInterface.php:580
 msgid "Only preload 1-2 critical font weights (like your main body font weight) for best performance."
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:568
-#: includes/Admin/AdminInterface.php:573
+#: includes/Admin/AdminInterface.php:589
+#: includes/Admin/AdminInterface.php:594
 #: views/help-page.php:139
 msgid "Data Management"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:581
+#: includes/Admin/AdminInterface.php:602
 msgid "Delete all plugin data when uninstalling"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:585
+#: includes/Admin/AdminInterface.php:606
 msgid "⚠️ Warning: If checked, uninstalling this plugin will permanently delete:"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:586
+#: includes/Admin/AdminInterface.php:607
 msgid "All uploaded font files"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:587
+#: includes/Admin/AdminInterface.php:608
 msgid "Font database records"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:588
+#: includes/Admin/AdminInterface.php:609
 msgid "All plugin settings"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:589
+#: includes/Admin/AdminInterface.php:610
 msgid "This cannot be undone!"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:589
+#: includes/Admin/AdminInterface.php:610
 msgid "Leave unchecked if you plan to reinstall later."
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:602
+#: includes/Admin/AdminInterface.php:618
+msgid "Font CSS"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:625
+msgid "Regenerate CSS"
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:628
+msgid "Manually regenerate the fonts.css file. This is useful if fonts aren't displaying correctly after an update."
+msgstr ""
+
+#: includes/Admin/AdminInterface.php:641
 msgid "Save Settings"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:623
+#: includes/Admin/AdminInterface.php:662
 msgid "System Information"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:627
+#: includes/Admin/AdminInterface.php:666
 msgid "Plugin Version"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:632
+#: includes/Admin/AdminInterface.php:671
 msgid "WordPress Version"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:637
+#: includes/Admin/AdminInterface.php:676
 msgid "PHP Version"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:642
+#: includes/Admin/AdminInterface.php:681
 msgid "Fonts Directory"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:649
+#: includes/Admin/AdminInterface.php:688
 msgid "Writable"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:651
+#: includes/Admin/AdminInterface.php:690
 msgid "Not writable"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:657
+#: includes/Admin/AdminInterface.php:696
 msgid "Fonts URL"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:667
+#: includes/Admin/AdminInterface.php:706
 msgid "Max Upload Size"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:672
+#: includes/Admin/AdminInterface.php:711
 msgid "Memory Limit"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:677
+#: includes/Admin/AdminInterface.php:716
 #: views/admin-page.php:65
 #: views/dashboard-page.php:125
 #: views/upload-page.php:53
 msgid "Gutenberg Integration"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:680
+#: includes/Admin/AdminInterface.php:719
 msgid "WordPress 6.5+ Font Library Supported"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:682
+#: includes/Admin/AdminInterface.php:721
 msgid "WordPress 6.5+ required for Font Library"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:689
+#: includes/Admin/AdminInterface.php:728
 msgid "🚀 Want More Features?"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:690
+#: includes/Admin/AdminInterface.php:729
 msgid "Upgrade to SafeFonts Pro for:"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:692
+#: includes/Admin/AdminInterface.php:731
 msgid "✅ Page Builder Integration (Elementor, Bricks, Beaver Builder, Divi, Oxygen)"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:693
+#: includes/Admin/AdminInterface.php:732
 msgid "✅ Bulk ZIP Package Import from Google Fonts Downloader"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:694
+#: includes/Admin/AdminInterface.php:733
 msgid "✅ Professional Admin Interface with Drag & Drop"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:695
+#: includes/Admin/AdminInterface.php:734
 msgid "✅ Advanced Font Management Tools"
 msgstr ""
 
-#: includes/Admin/AdminInterface.php:699
+#: includes/Admin/AdminInterface.php:738
 msgid "Learn More About SafeFonts Pro →"
 msgstr ""
 
-#: includes/Core.php:372
+#: includes/Admin/CssReferencePage.php:49
+msgid "This page provides comprehensive CSS reference documentation for using SafeFonts in your custom code and themes."
+msgstr ""
+
+#: includes/Admin/CssReferencePage.php:59
+msgid "No fonts found."
+msgstr ""
+
+#: includes/Admin/CssReferencePage.php:60
+msgid "Please upload fonts to see CSS reference documentation."
+msgstr ""
+
+#: includes/Admin/CssReferencePage.php:83
+msgid "CSS Variables (Custom Properties)"
+msgstr ""
+
+#: includes/Admin/CssReferencePage.php:86
+msgid "SafeFonts automatically generates CSS variables for all your fonts. Use these in custom CSS or any theme that supports CSS custom properties."
+msgstr ""
+
+#: includes/Admin/CssReferencePage.php:92
+#: includes/Admin/CssReferencePage.php:182
+msgid "Font Family"
+msgstr ""
+
+#: includes/Admin/CssReferencePage.php:93
+msgid "CSS Variable Name"
+msgstr ""
+
+#: includes/Admin/CssReferencePage.php:94
+msgid "Usage in CSS"
+msgstr ""
+
+#: includes/Admin/CssReferencePage.php:115
+#: includes/Admin/CssReferencePage.php:198
+msgid "Click to copy"
+msgstr ""
+
+#: includes/Admin/CssReferencePage.php:119
+#: includes/Admin/CssReferencePage.php:202
+msgid "(click to copy)"
+msgstr ""
+
+#. translators: %s: font-family CSS value
+#: includes/Admin/CssReferencePage.php:126
+#, php-format
+msgid "Resolves to: %s"
+msgstr ""
+
+#: includes/Admin/CssReferencePage.php:138
+msgid "How to Use in Custom CSS"
+msgstr ""
+
+#: includes/Admin/CssReferencePage.php:139
+msgid "Use CSS variables in your theme's custom CSS (Appearance → Customize → Additional CSS) or child theme stylesheet:"
+msgstr ""
+
+#: includes/Admin/CssReferencePage.php:149
+msgid "Advanced Theme Integration"
+msgstr ""
+
+#: includes/Admin/CssReferencePage.php:150
+msgid "Use CSS variables in your child theme or custom theme development:"
+msgstr ""
+
+#: includes/Admin/CssReferencePage.php:173
+msgid "Gutenberg CSS Classes"
+msgstr ""
+
+#: includes/Admin/CssReferencePage.php:176
+msgid "SafeFonts automatically generates CSS classes for Gutenberg blocks. These classes are available when using the block editor in HTML mode or custom block development."
+msgstr ""
+
+#: includes/Admin/CssReferencePage.php:183
+msgid "CSS Class"
+msgstr ""
+
+#: includes/Admin/CssReferencePage.php:184
+msgid "Usage Example"
+msgstr ""
+
+#: includes/Admin/CssReferencePage.php:216
+msgid "How to Use in Gutenberg"
+msgstr ""
+
+#: includes/Admin/CssReferencePage.php:218
+msgid "Select a block in the Gutenberg editor"
+msgstr ""
+
+#: includes/Admin/CssReferencePage.php:219
+msgid "Click the three dots (Options) and select \"Edit as HTML\""
+msgstr ""
+
+#: includes/Admin/CssReferencePage.php:220
+msgid "Add the CSS class to your block's HTML"
+msgstr ""
+
+#: includes/Admin/CssReferencePage.php:221
+msgid "Switch back to visual editing and the font will be applied"
+msgstr ""
+
+#: includes/Admin/CssReferencePage.php:224
+msgid "Note:"
+msgstr ""
+
+#: includes/Admin/CssReferencePage.php:224
+msgid "For regular Gutenberg usage, fonts are automatically available in the block editor Typography settings. These CSS classes are mainly for advanced use cases and custom block development."
+msgstr ""
+
+#: includes/Admin/CssReferencePage.php:238
+msgid "General CSS Implementation"
+msgstr ""
+
+#: includes/Admin/CssReferencePage.php:243
+msgid "@font-face Declarations"
+msgstr ""
+
+#: includes/Admin/CssReferencePage.php:244
+msgid "SafeFonts automatically generates @font-face declarations for all uploaded fonts. These are injected into the page <head> section."
+msgstr ""
+
+#: includes/Admin/CssReferencePage.php:255
+msgid "Performance Optimization"
+msgstr ""
+
+#: includes/Admin/CssReferencePage.php:256
+msgid "SafeFonts uses font-display: swap for optimal performance. This ensures text remains visible during font loading."
+msgstr ""
+
+#: includes/Admin/CssReferencePage.php:258
+msgid "Fonts are served from your own server"
+msgstr ""
+
+#: includes/Admin/CssReferencePage.php:259
+msgid "No external font API requests"
+msgstr ""
+
+#: includes/Admin/CssReferencePage.php:260
+msgid "GDPR compliant by default"
+msgstr ""
+
+#: includes/Admin/CssReferencePage.php:261
+msgid "Reduced page load dependencies"
+msgstr ""
+
+#: includes/Admin/CssReferencePage.php:266
+msgid "Font File Location"
+msgstr ""
+
+#: includes/Admin/CssReferencePage.php:267
+msgid "Uploaded font files are stored securely in:"
+msgstr ""
+
+#: includes/Admin/CssReferencePage.php:271
+msgid "Each font family has its own folder with all weight and style variants."
+msgstr ""
+
+#: includes/Admin/CssReferencePage.php:275
+msgid "CSS File Generation"
+msgstr ""
+
+#: includes/Admin/CssReferencePage.php:276
+msgid "A single fonts.css file is generated and cached for all fonts:"
+msgstr ""
+
+#: includes/Admin/CssReferencePage.php:280
+msgid "This file is automatically regenerated when fonts are added, updated, or removed."
+msgstr ""
+
+#: includes/Admin/CssReferencePage.php:286
+msgid "Need Page Builder Integration?"
+msgstr ""
+
+#. translators: %s: link to SafeFonts Pro
+#: includes/Admin/CssReferencePage.php:291
+#, php-format
+msgid "For automatic integration with popular page builders and themes (Elementor, Bricks, Beaver Builder, Divi, Oxygen, Brizy, Builderius, Astra, GeneratePress, Kadence, Blocksy, and more), check out %s."
+msgstr ""
+
+#: includes/Admin/CssReferencePage.php:292
+msgid "SafeFonts Pro"
+msgstr ""
+
+#: includes/Core.php:378
 msgid "Locally hosted fonts managed by SafeFonts"
 msgstr ""
 
-#: includes/Core.php:731
-#: includes/Core.php:743
+#: includes/Core.php:441
+msgid "Insufficient permissions"
+msgstr ""
+
+#: includes/Core.php:448
+msgid "Font CSS successfully regenerated!"
+msgstr ""
+
+#: includes/Core.php:450
+msgid "Failed to regenerate CSS file. Please check file permissions."
+msgstr ""
+
+#: includes/Core.php:791
+#: includes/Core.php:803
 msgid "SafeFonts Error:"
 msgstr ""
 
 #. translators: %s: directory path
-#: includes/Core.php:734
+#: includes/Core.php:794
 #, php-format
 msgid "Could not create the fonts directory at <code>%s</code>. Please create this directory manually and ensure it is writable by the web server."
 msgstr ""
 
 #. translators: %s: directory path
-#: includes/Core.php:746
+#: includes/Core.php:806
 #, php-format
 msgid "The fonts directory at <code>%s</code> is not writable. Please set the correct permissions (755 or 775) for this directory."
 msgstr ""
 
-#: includes/Core.php:750
+#: includes/Core.php:810
 msgid "You can fix this by running:"
 msgstr ""
 
-#: includes/FontManager.php:166
+#: includes/FontManager.php:182
 msgid "Failed to create font family directory."
 msgstr ""
 
-#: includes/FontManager.php:173
+#: includes/FontManager.php:189
 msgid "Font directory is not writable. Check file permissions."
 msgstr ""
 
-#: includes/FontManager.php:189
+#: includes/FontManager.php:205
 msgid "Failed to copy font file."
 msgstr ""
 
-#: includes/FontManager.php:194
+#: includes/FontManager.php:210
 msgid "Font file was not copied to destination."
 msgstr ""
 
-#: includes/FontManager.php:222
+#: includes/FontManager.php:238
 msgid "Failed to save font to database."
 msgstr ""
 
-#: includes/FontManager.php:242
+#: includes/FontManager.php:258
 msgid "Font file not found."
 msgstr ""
 
-#: includes/FontManager.php:248
+#: includes/FontManager.php:264
 msgid "Font file is too large."
 msgstr ""
 
 #. translators: %1$s: file extension, %2$s: allowed file types
-#: includes/FontManager.php:267
+#: includes/FontManager.php:283
 #, php-format
 msgid "Font file extension \"%1$s\" is not allowed. Allowed types: %2$s"
 msgstr ""
 
 #. translators: %1$s: detected MIME type, %2$s: file extension
-#: includes/FontManager.php:278
+#: includes/FontManager.php:294
 #, php-format
 msgid "Font file MIME type \"%1$s\" is not valid for .%2$s files."
 msgstr ""
 
-#: includes/FontManager.php:283
+#: includes/FontManager.php:299
 msgid "Font file signature validation failed."
 msgstr ""
 
-#: includes/FontManager.php:422
-#: includes/FontManager.php:469
-#: includes/FontManager.php:543
+#: includes/FontManager.php:438
+#: includes/FontManager.php:485
+#: includes/FontManager.php:559
 msgid "Security check failed."
 msgstr ""
 
-#: includes/FontManager.php:426
+#: includes/FontManager.php:442
 msgid "No file uploaded."
 msgstr ""
 
-#: includes/FontManager.php:434
+#: includes/FontManager.php:450
 msgid "File upload error."
 msgstr ""
 
-#: includes/FontManager.php:445
+#: includes/FontManager.php:461
 msgid "Font family name is required."
 msgstr ""
 
-#: includes/FontManager.php:457
+#: includes/FontManager.php:473
 msgid "Font uploaded successfully!"
 msgstr ""
 
-#: includes/FontManager.php:473
+#: includes/FontManager.php:489
 msgid "Font ID is required."
 msgstr ""
 
-#: includes/FontManager.php:492
+#: includes/FontManager.php:508
 msgid "Font not found."
 msgstr ""
 
-#: includes/FontManager.php:532
+#: includes/FontManager.php:548
 msgid "Font deleted successfully."
 msgstr ""
 
-#: includes/FontManager.php:547
+#: includes/FontManager.php:563
 msgid "No fonts selected."
 msgstr ""
 
-#: includes/FontManager.php:554
+#: includes/FontManager.php:570
 msgid "No valid font IDs provided."
 msgstr ""
 
 #. translators: %d: number of fonts deleted
-#: includes/FontManager.php:627
+#: includes/FontManager.php:643
 #, php-format
 msgid "%d font deleted successfully."
 msgid_plural "%d fonts deleted successfully."
